@@ -1,0 +1,73 @@
+<ion-view view-title="Account Manager">
+  <ion-content>
+    <div style="font-size: 17px; text-align: center; background: white; border-bottom: 0px;" class="item item-divider">
+      <b>My Portfolio (4)</b>
+    </div>
+
+    <div class="row">
+      <div class="col"><img src="img/portfolio/a.jpg" alt="" style="width: 100%;"></div>
+      <div class="col"><img src="img/portfolio/b.jpg" alt="" style="width: 100%;"></div>
+      <div class="col"><img src="img/portfolio/c.jpg" alt="" style="width: 100%;"></div>
+      <div class="col"><img src="img/portfolio/d.jpg" alt="" style="width: 100%;"></div>
+    </div>
+    <div style="padding: 15px 15px; border-bottom-width: 1px; border-bottom-color: #444; border-bottom-style: dashed;">
+      <a class="button button-block button-royal" href="#/tab/manage-portfolio">Manage Portfolio</a>
+    </div>
+
+
+
+
+    <br>
+
+    <div style="font-size: 17px; text-align: center; background: white; border-bottom: 0px; border-top: 0px;" class="item item-divider">
+      <b>My Services (2)</b>
+    </div>
+    <br>
+    <div class="list">
+
+      <a class="item" href="#">
+        Fresh & Dewy
+        <span class="item-note">
+          <span class="text-right"><b>Price</b>: P800</span>
+        </span>
+      </a>
+
+      <a class="item" href="#">
+        Modern Muse
+        <span class="item-note">
+          <span class="text-right"><b>Price</b>: P1500</span>
+        </span>
+      </a>
+
+    </div>
+
+    <div style="padding: 15px 15px; border-bottom-width: 1px; border-bottom-color: #444; border-bottom-style: dashed;">
+      <a class="button button-block button-positive" href="#/tab/manage-services">Manage Services</a>
+    </div>
+    <br>
+
+    <div style="font-size: 17px; text-align: center; background: white; border-bottom: 0px; border-top: 0px;">
+      My Reviews (<b>17</b>)
+    </div>
+    <br>
+    <!-- <div ng-if="!artistReviews.length" class="item" style="text-align: center; white-space: normal;">Sorry, {{profile.firstName}} doesn't have any reviews yet.</div> -->
+    <div class="list">
+      <a class="item item-avatar" href="#">
+        <img src="img/ben.png">
+        <h2>Jamie Lannister</h2>
+        <p>Awesome Artist!</p>
+      </a>
+
+      <a class="item item-avatar" href="#">
+        <img src="img/mike.png">
+        <h2>Stannis Baratheon</h2>
+        <p>Thank You!</p>
+      </a>
+    </div>
+
+    <label class="item" style="border-top-width: 0px; border-bottom-width: 5px; padding-top: 0px;">
+      <button class="button button-block button-energized" ng-click="saveArtistProfile(picFile)">View All Reviews</button>
+    </label>
+
+  </ion-content>
+</ion-view>

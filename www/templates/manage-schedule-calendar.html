@@ -1,0 +1,52 @@
+<ion-view>
+  <!-- <ion-content>
+      <div>
+        <button class="button" ng-disabled="isToday()" ng-click="today()">Today</button>
+        <button class="button" ng-click="changeMode('month')">M</button>
+        <button class="button" ng-click="changeMode('week')">W</button>
+        <button class="button" ng-click="changeMode('day')">D</button>
+        <button class="button" ng-click="loadEvents()">Load Events</button>
+      </div>
+
+
+      <calendar ng-model="calendar.currentDate" calendar-mode="calendar.mode" event-source="calendar.eventSource"
+      range-changed="reloadSource(startTime, endTime)"
+      event-selected="onEventSelected(event)" title-changed="onViewTitleChanged(title)"
+      time-selected="onTimeSelected(selectedTime, events)" step="30"></calendar>
+  </ion-content> -->
+  <ion-view view-title="">
+    <ion-nav-buttons side="right">
+      <div style="padding-right: 10px; padding-top: 5px;">
+
+        <span style="font-size: 16px;">{{viewTitle}}</span>
+      </div>
+
+
+      <div>
+        <button class="button" ng-disabled="isToday()" ng-click="today()">Today</button>
+      </div>
+      <div>
+        <button class="button" ng-click="changeMode('month')">M</button>
+      </div>
+      <div>
+        <button class="button" ng-click="changeMode('week')">W</button>
+      </div>
+      <div>
+        <button class="button" ng-click="changeMode('day')">D</button>
+      </div>
+
+
+      <!-- <button class="button" ng-click="loadEvents()">Load Events</button> -->
+    </ion-nav-buttons>
+
+
+    <ion-content scroll="false" class="main-content">
+
+      <calendar ng-model="calendar.currentDate" calendar-mode="calendar.mode" event-source="calendar.eventSource"
+      range-changed="reloadSource(startTime, endTime)"
+      event-selected="onEventSelected(event)" title-changed="onViewTitleChanged(title)"
+      time-selected="onTimeSelected(selectedTime, events)" step="30"></calendar>
+    </ion-content>
+  </ion-view>
+
+</ion-view>

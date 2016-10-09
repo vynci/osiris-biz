@@ -1,0 +1,117 @@
+<ion-view view-title="My Appointments">
+  <ion-content>
+
+    <!-- <label class="item" style="border-top-width: 0px; border-top-width: 0px; border-bottom-width: 1px; border-bottom-style: dashed; border-bottom-color: #444;"> -->
+    <div style="font-size: 17px; text-align: center; background: white; border-bottom: 0px;" class="item item-divider">
+      <a class="button button-block button-royal" href="#/tab/manage-schedule-calendar">View Calendar Schedules</a>
+    </div>
+    <!-- </label> -->
+
+    <div class="card">
+      <div class="list">
+
+        <a class="item item-button-right" ng-click="showBookingAlert()">
+          Arya Stark
+          <button class="button button-positive">
+            <i class="icon ion-checkmark"> Accept</i>
+          </button>
+        </a>
+
+        <a class="item item-button-right" ng-click="showBookingAlert()">
+          <span >Sansa Stark</span>
+          <button class="button button-positive">
+            <i class="icon ion-checkmark"> Accept</i>
+          </button>
+        </a>
+        <a class="item item-button-right" ng-click="showBookingAlert()">
+          Cersie Lannister
+          <button class="button button-positive">
+            <i class="icon ion-checkmark"> Accept</i>
+          </button>
+        </a>
+
+      </div>
+
+      <div style="background: #ffc900; color: white;" class="item item-divider text-center">
+        Pending
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="item item-divider">
+      </div>
+      <a class="item item-button-right" href="#">
+        Renly Baratheon
+        <button class="button button-balanced">
+          Set to Complete
+        </button>
+      </a>
+      <a class="item item-button-right" href="#">
+        Jamie Lannister
+        <button class="button button-balanced">
+          Set to Complete
+        </button>
+      </a>
+      <a class="item item-button-right" href="#">
+        Yara Greyjoy
+        <button class="button button-balanced">
+          Set to Complete
+        </button>
+      </a>
+      <div style="background: #387ef5; color: white;" class="item item-divider text-center">
+        Accepted
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="item item-divider">
+      </div>
+      <a class="item" href="#">
+        Petyr Baelish
+        <span class="item-note">
+          Oct. 7, 2016
+        </span>
+      </a>
+      <a class="item" href="#">
+        Jorah Mormont
+        <span class="item-note">
+          Oct. 10, 2016
+        </span>
+      </a>
+      <a class="item" href="#">
+        Catelyn Stark
+        <span class="item-note">
+          Oct. 11, 2016
+        </span>
+      </a>
+      <div style="background: #33cd5f; color: white;" class="item item-divider text-center">
+        Completed
+      </div>
+    </div>
+
+    <div class="card">
+      <a class="item item-button-right" href="#">
+        Loras Tyrell
+        <button class="button button-assertive">
+          <i class="icon ion-trash-a"></i>
+        </button>
+      </a>
+      <a class="item item-button-right" href="#">
+        Gregor Clegane
+        <button class="button button-assertive">
+          <i class="icon ion-trash-a"></i>
+        </button>
+      </a>
+      <a class="item item-button-right" href="#">
+        Alliser Thorne
+        <button class="button button-assertive">
+          <i class="icon ion-trash-a"></i>
+        </button>
+      </a>
+      <div style="background: #ef473a; color: white;" class="item item-divider text-center">
+        Canceled
+      </div>
+    </div>
+
+  </ion-content>
+</ion-view>

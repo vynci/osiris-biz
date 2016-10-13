@@ -1,16 +1,20 @@
-app.controller('DashCtrl', function($scope, $ionicPopup, Pubnub, $pubnubChannel, $rootScope) {
+app.controller('DashCtrl', function($scope, $ionicPopup, Pubnub, $pubnubChannel, $state, $rootScope) {
 	var user = {
 		id : "jsYBzvkOHj"
 	}
+    
+    $scope.redirectToAppointments = function(){
+        $state.transitionTo('tab.manage-appointments', null, {reload: true, notify:true});    
+    }
 
 	$scope.showMessageAlert = function(message) {
 		$scope.data = {};
 
 		// An elaborate, custom popup
 		var myPopup = $ionicPopup.show({
-			template: '<textarea rows="4" cols="50" type="password" ng-model="data.wifi">',
+			template: '<div style="padding: 0px 100px; text-align: center;"><img style="width:50%; border-radius: 50%";" src="img/portfolio/a.jpg"></div><br><textarea rows="4" cols="50" type="password" ng-model="data.wifi">',
 			title: '<b>You have a new message!</b> <br><br> <p style="text-align: justify;">' + message.content + '</p>',
-			subTitle: '<b>' + message.sender_uuid + '</b>',
+			subTitle: '<b>Arya Stark</b>',
 			scope: $scope,
 			buttons: [
 				{ text: 'Cancel' },

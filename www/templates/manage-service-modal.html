@@ -22,13 +22,13 @@
 				</textarea>
 			</label>
 		</div>
-		<label class="item" style="border-top-width: 0px;">
+		<label class="item" style="border-top-width: 0px;"  ng-if="!isModalEdit">
 			<button class="button button-block button-balanced" ng-click="createService()">Save</button>
 		</label>
-		<label class="item" style="border-top-width: 0px;">
+		<label class="item" style="border-top-width: 0px;"  ng-if="isModalEdit">
 			<button class="button button-block button-positive" ng-click="updateService()">Update</button>
 		</label>
-		<label class="item" style="border-top-width: 0px;">
+		<label class="item" style="border-top-width: 0px;" ng-if="isModalEdit">
 			<button class="button button-block button-assertive" ng-click="deleteService()">Delete</button>
 		</label>
 		<label class="item" style="border-top-width: 0px;">

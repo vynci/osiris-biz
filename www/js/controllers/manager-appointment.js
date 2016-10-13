@@ -30,7 +30,7 @@ app.controller('ManagerAppointmentCtrl', function($scope, $ionicPopup) {
 							}
 						}
 					}
-					]
+				]
 			});
 
 

@@ -1,4 +1,4 @@
-app.controller('ManagerPortfolioCtrl', function($scope, serviceService, $ionicLoading, portfolioService, $ionicPopup) {
+app.controller('ManagerPortfolioCtrl', function($scope, serviceService, $ionicLoading, portfolioService, $ionicPopup, $ionicHistory, $state) {
 	console.log('manager services controller');
 
 	var userId = '';
@@ -29,7 +29,8 @@ app.controller('ManagerPortfolioCtrl', function($scope, serviceService, $ionicLo
 			subTitle: '',
 			scope: $scope,
 			buttons: [
-				{ text: 'Close' }
+				{ text: 'Close' },
+                { text: 'Delete' , type: 'button-assertive'}
 			]
 			});
 

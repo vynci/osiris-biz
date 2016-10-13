@@ -1,9 +1,10 @@
-app.controller('ManagerServicesCtrl', function($scope, serviceService, $ionicLoading, $ionicModal, artistService, $ionicPopup) {
+app.controller('ManagerServicesCtrl', function($scope, serviceService, $ionicLoading, $ionicHistory, $ionicModal, artistService, $ionicPopup, $state) {
 	console.log('manager services controller');
 
 	var userId = '';
 	var priceRange = [];
 	$scope.service = {};
+    $scope.isModalEdit = false;
 
 	if(Parse.User.current()){
 		userId = Parse.User.current().get('profileId');
@@ -20,11 +21,14 @@ app.controller('ManagerServicesCtrl', function($scope, serviceService, $ionicLoa
 
 	$scope.addService = function(){
 		console.log('add service');
+        $scope.isModalEdit = false;
+        $scope.service = {};
 		$scope.modal.show();
 	}
 
 	$scope.editService = function(service){
 		console.log('edit service');
+        $scope.isModalEdit = true;
 		$scope.modal.show();
 		$scope.currentService = service;
 		$scope.service = {
@@ -59,11 +63,13 @@ app.controller('ManagerServicesCtrl', function($scope, serviceService, $ionicLoa
 					$scope.artistProfile.save(null, {
 						success: function(result) {
 							$scope.modal.hide();
+                            getServiceById(userId);
 						},
 						error: function(gameScore, error) {
 							// Execute any logic that should take place if the save fails.
 							// error is a Parse.Error with an error code and message.
 							console.log(error);
+                            getServiceById(userId);
 						}
 					});
 
@@ -74,6 +80,7 @@ app.controller('ManagerServicesCtrl', function($scope, serviceService, $ionicLoa
 				// Execute any logic that should take place if the save fails.
 				// error is a Parse.Error with an error code and message.
 				$ionicLoading.hide();
+                getServiceById(userId);
 				var alertPopup = $ionicPopup.alert({
 					title: 'Service',
 					template: 'Service: Add Failed'
@@ -160,10 +167,12 @@ app.controller('ManagerServicesCtrl', function($scope, serviceService, $ionicLoa
 					$scope.artistProfile.save(null, {
 						success: function(result) {
 							$scope.modal.hide();
+                            getServiceById(userId);
 						},
 						error: function(gameScore, error) {
 							// Execute any logic that should take place if the save fails.
 							// error is a Parse.Error with an error code and message.
+                            getServiceById(userId);
 							console.log(error);
 						}
 					});
@@ -175,6 +184,7 @@ app.controller('ManagerServicesCtrl', function($scope, serviceService, $ionicLoa
 				// Execute any logic that should take place if the save fails.
 				// error is a Parse.Error with an error code and message.
 				$ionicLoading.hide();
+                getServiceById(userId);
 				var alertPopup = $ionicPopup.alert({
 					title: 'Service',
 					template: 'Service: Add Failed'

@@ -3,19 +3,23 @@
 
 
     <label class="item" style="border-top-width: 0px;">
-      <button class="button button-block button-royal" ng-click="saveArtistProfile(picFile)">Upload Portfolio</button>
+      <button class="button button-block button-royal" ng-click="showUploadOption()">Upload Portfolio</button>
     </label>
 
     <div class="item item-divider">
-      My Portfolio (<b>4</b>)
+      My Portfolio (<b>{{artistPortfolio.length}}</b>)
     </div>
 
-    <div class="row">
-      <div class="col"><img src="img/portfolio/a.jpg" alt="" style="width: 100%;"></div>
-      <div class="col"><img src="img/portfolio/b.jpg" alt="" style="width: 100%;"></div>
-      <div class="col"><img src="img/portfolio/c.jpg" alt="" style="width: 100%;"></div>
-      <div class="col"><img src="img/portfolio/d.jpg" alt="" style="width: 100%;"></div>
+    <div class="row" ng-repeat="image in artistPortfolio" ng-if="$index % 3 === 0">
+      <div class="col col-33" ng-if="$index < artistPortfolio.length">
+        <img ng-click="viewPortfolio(artistPortfolio[$index].attributes)" ng-src="{{artistPortfolio[$index].attributes.imagePath}}" spinkit-image-preloader='chasing-dots-spinner' width="100%" />
+      </div>
+      <div class="col col-33" ng-if="$index + 1 < artistPortfolio.length">
+        <img ng-click="viewPortfolio(artistPortfolio[$index + 1].attributes)"ng-src="{{artistPortfolio[$index + 1].attributes.imagePath}}" spinkit-image-preloader='chasing-dots-spinner' width="100%" />
+      </div>
+      <div class="col col-33" ng-if="$index + 2 < artistPortfolio.length">
+        <img ng-click="viewPortfolio(artistPortfolio[$index + 2].attributes)" ng-src="{{artistPortfolio[$index + 2].attributes.imagePath}}" spinkit-image-preloader='chasing-dots-spinner' width="100%" />
+      </div>
     </div>
-
   </ion-content>
 </ion-view>

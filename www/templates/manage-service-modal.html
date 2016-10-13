@@ -1,0 +1,38 @@
+<ion-modal-view>
+	<ion-header-bar>
+		<h1 class="title">Add Service</h1>
+	</ion-header-bar>
+	<ion-content>
+		<div class="list" style="padding-right: 20px;">
+			<label class="item item-input item-floating-label">
+				<span class="input-label">Service Name</span>
+				<input type="text" ng-model="service.name" placeholder="Service Name">
+			</label>
+			<label class="item item-input item-floating-label">
+				<span class="input-label">Duration(mins)</span>
+				<input type="number" ng-model="service.duration" placeholder="Duration(mins)">
+			</label>
+			<label class="item item-input item-floating-label">
+				<span class="input-label">Price(PHP)</span>
+				<input type="number" ng-model="service.price" placeholder="Price(PHP)">
+			</label>
+			<label class="item item-input item-floating-label">
+				<span class="input-label">Description</span>
+				<textarea ng-model="service.description" name="" id="" cols="30" rows="10" style="box-sizing: border-box; border-color: gray; width:100%; border-width: 1px; border-style: solid;" ng-model="rating.review" placeholder="Description">
+				</textarea>
+			</label>
+		</div>
+		<label class="item" style="border-top-width: 0px;">
+			<button class="button button-block button-balanced" ng-click="createService()">Save</button>
+		</label>
+		<label class="item" style="border-top-width: 0px;">
+			<button class="button button-block button-positive" ng-click="updateService()">Update</button>
+		</label>
+		<label class="item" style="border-top-width: 0px;">
+			<button class="button button-block button-assertive" ng-click="deleteService()">Delete</button>
+		</label>
+		<label class="item" style="border-top-width: 0px;">
+			<button class="button button-block button-stable" ng-click="closeModal()">Back</button>
+		</label>
+	</ion-content>
+</ion-modal-view>

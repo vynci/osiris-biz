@@ -9,25 +9,20 @@ app.factory('Chats', function() {
     name: 'Ben Sparrow',
     lastText: 'You on your way?',
     face: 'img/portfolio/a.jpg'
-  }, {
-    id: 1,
-    name: 'Max Lynx',
-    lastText: 'Hey, it\'s me',
-    face: 'img/ben.png'
-  }, {
+  },{
     id: 2,
     name: 'Adam Bradleyson',
-    lastText: 'I should buy a boat',
+    lastText: 'Hi! I would just like to inquire',
     face: 'img/portfolio/b.jpg'
   }, {
     id: 3,
     name: 'Perry Governor',
-    lastText: 'Look at my mukluks!',
+    lastText: 'Thanks!',
     face: 'img/portfolio/c.jpg'
   }, {
     id: 4,
     name: 'Mike Harrington',
-    lastText: 'This is wicked good ice cream.',
+    lastText: 'Awesome! See you soon!',
     face: 'img/portfolio/d.jpg'
   }];
 

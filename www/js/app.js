@@ -23,7 +23,7 @@ app.run(function($ionicPlatform) {
   });
 
   Parse.initialize("myAppId");
-  Parse.serverURL = 'https://muse-rest-api.herokuapp.com/parse';  
+  Parse.serverURL = 'https://muse-rest-api.herokuapp.com/parse';
 })
 
 app.config(function($stateProvider, $urlRouterProvider) {
@@ -35,6 +35,7 @@ app.config(function($stateProvider, $urlRouterProvider) {
   $stateProvider
 
   // setup an abstract state for the tabs directive
+
   .state('tab', {
     url: '/tab',
     abstract: true,
@@ -98,7 +99,8 @@ app.config(function($stateProvider, $urlRouterProvider) {
     url: '/manage-portfolio',
     views: {
       'tab-services': {
-        templateUrl: 'templates/manage-portfolio.html'
+        templateUrl: 'templates/manage-portfolio.html',
+        controller : 'ManagerPortfolioCtrl'        
       }
     }
   })
@@ -107,7 +109,8 @@ app.config(function($stateProvider, $urlRouterProvider) {
     url: '/manage-services',
     views: {
       'tab-services': {
-        templateUrl: 'templates/manage-services.html'
+        templateUrl: 'templates/manage-services.html',
+        controller : 'ManagerServicesCtrl'
       }
     }
   })
@@ -132,6 +135,15 @@ app.config(function($stateProvider, $urlRouterProvider) {
     }
   })
 
+  .state('tab.account-login', {
+    url: '/login',
+    views: {
+      'tab-account': {
+        templateUrl: 'templates/login.html',
+        controller: 'LoginCtrl'
+      }
+    }
+  })
 
   .state('tab.account', {
     url: '/account',

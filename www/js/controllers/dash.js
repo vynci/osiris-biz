@@ -1,8 +1,19 @@
-app.controller('DashCtrl', function($scope, $ionicPopup, Pubnub, $pubnubChannel, $state, $rootScope) {
+app.controller('DashCtrl', function($scope, $ionicPopup, Pubnub, $pubnubChannel, $state, $rootScope, $ionicLoading, $ionicHistory) {
 	var user = {
 		id : "jsYBzvkOHj"
 	}
     
+	$scope.$on('$ionicView.enter', function(e) {
+        if(Parse.User.current()){
+            user.id = Parse.User.current().get('profileId');
+        }else{
+            $ionicHistory.nextViewOptions({
+                disableBack: true
+            });
+            $state.transitionTo('tab.account-login', null, {reload: true, notify:true});
+        }
+	});    
+
     $scope.redirectToAppointments = function(){
         $state.transitionTo('tab.manage-appointments', null, {reload: true, notify:true});    
     }

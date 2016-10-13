@@ -5,22 +5,23 @@ app.controller('AccountCtrl', function($scope, $ionicLoading, $rootScope, artist
 
 	}
 
-	if(Parse.User.current()){
-		userId = Parse.User.current().get('profileId');
-		$ionicLoading.show({
-			template: 'Loading...'
-		}).then(function(){
+	$scope.$on('$ionicView.enter', function(e) {
+        if(Parse.User.current()){
+            userId = Parse.User.current().get('profileId');
+            $ionicLoading.show({
+                template: 'Loading...'
+            }).then(function(){
 
-		});
+            });
 
-		getArtistById(userId);
-	}else{
-		$ionicHistory.nextViewOptions({
-			disableBack: true
-		});
-		$state.transitionTo('tab.account-login', null, {reload: true, notify:true});
-	}
-
+            getArtistById(userId);
+        }else{
+            $ionicHistory.nextViewOptions({
+                disableBack: true
+            });
+            $state.transitionTo('tab.account-login', null, {reload: true, notify:true});
+        }
+	});
 
 	$scope.updateProfile = function(){
 		updateProfile(false);

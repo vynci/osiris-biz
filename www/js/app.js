@@ -5,7 +5,7 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-var app = angular.module('starter', ['ionic', 'ui.rCalendar', 'pubnub.angular.service'])
+var app = angular.module('starter', ['ionic', 'ui.rCalendar', 'pubnub.angular.service', 'ion-datetime-picker', 'ionic.rating', 'angularMoment'])
 
 app.run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -100,7 +100,7 @@ app.config(function($stateProvider, $urlRouterProvider) {
     views: {
       'tab-services': {
         templateUrl: 'templates/manage-portfolio.html',
-        controller : 'ManagerPortfolioCtrl'        
+        controller : 'ManagerPortfolioCtrl'
       }
     }
   })

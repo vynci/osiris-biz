@@ -10,23 +10,11 @@
     <div class="card">
       <div class="list">
 
-        <a class="item item-button-right" ng-click="showBookingAlert()">
-          Arya Stark
-          <button class="button button-positive">
-            <i class="icon ion-checkmark"> Accept</i>
-          </button>
-        </a>
-
-        <a class="item item-button-right" ng-click="showBookingAlert()">
-          <span >Sansa Stark</span>
-          <button class="button button-positive">
-            <i class="icon ion-checkmark"> Accept</i>
-          </button>
-        </a>
-        <a class="item item-button-right" ng-click="showBookingAlert()">
-          Cersie Lannister
-          <button class="button button-positive">
-            <i class="icon ion-checkmark"> Accept</i>
+        <a class="item item-button-right" ng-repeat="pendingAppointment in appointments.pending">
+          {{pendingAppointment.attributes.customerInfo.firstName}} {{pendingAppointment.attributes.customerInfo.lastName}} <br>
+          <p>{{pendingAppointment.attributes.createdAt.toString() | limitTo:21}}</p>
+          <button class="button button-positive" ng-click="showBookingAlert(pendingAppointment, 'Accept')">
+            View
           </button>
         </a>
 
@@ -40,22 +28,10 @@
     <div class="card">
       <div class="item item-divider">
       </div>
-      <a class="item item-button-right" href="#">
-        Renly Baratheon
-        <button class="button button-balanced">
-          Set to Complete
-        </button>
-      </a>
-      <a class="item item-button-right" href="#">
-        Jamie Lannister
-        <button class="button button-balanced">
-          Set to Complete
-        </button>
-      </a>
-      <a class="item item-button-right" href="#">
-        Yara Greyjoy
-        <button class="button button-balanced">
-          Set to Complete
+      <a class="item item-button-right" ng-repeat="acceptedAppointment in appointments.accepted">
+        {{acceptedAppointment.attributes.customerInfo.firstName}} {{acceptedAppointment.attributes.customerInfo.lastName}}
+        <button class="button button-positive" ng-click="showBookingAlert(acceptedAppointment, 'Complete', 'button-balanced')">
+          View
         </button>
       </a>
       <div style="background: #387ef5; color: white;" class="item item-divider text-center">
@@ -66,22 +42,10 @@
     <div class="card">
       <div class="item item-divider">
       </div>
-      <a class="item" href="#">
-        Petyr Baelish
+      <a class="item" ng-repeat="completedAppointment in appointments.completed">
+        {{completedAppointment.attributes.customerInfo.firstName}} {{completedAppointment.attributes.customerInfo.lastName}}
         <span class="item-note">
-          Oct. 7, 2016
-        </span>
-      </a>
-      <a class="item" href="#">
-        Jorah Mormont
-        <span class="item-note">
-          Oct. 10, 2016
-        </span>
-      </a>
-      <a class="item" href="#">
-        Catelyn Stark
-        <span class="item-note">
-          Oct. 11, 2016
+          {{completedAppointment.attributes.customerInfo.dateCompleted}}
         </span>
       </a>
       <div style="background: #33cd5f; color: white;" class="item item-divider text-center">
@@ -90,20 +54,8 @@
     </div>
 
     <div class="card">
-      <a class="item item-button-right" href="#">
-        Loras Tyrell
-        <button class="button button-assertive">
-          <i class="icon ion-trash-a"></i>
-        </button>
-      </a>
-      <a class="item item-button-right" href="#">
-        Gregor Clegane
-        <button class="button button-assertive">
-          <i class="icon ion-trash-a"></i>
-        </button>
-      </a>
-      <a class="item item-button-right" href="#">
-        Alliser Thorne
+      <a class="item item-button-right" ng-repeat="canceledAppointment in appointments.canceled">
+        {{canceledAppointment.attributes.customerInfo.firstName}} {{canceledAppointment.attributes.customerInfo.lastName}}
         <button class="button button-assertive">
           <i class="icon ion-trash-a"></i>
         </button>

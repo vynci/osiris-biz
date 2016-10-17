@@ -28,6 +28,10 @@ view-title="Message">
 <ion-content has-bouncing="true" class="has-header has-footer"
 delegate-handle="userMessageScroll">
 
+<div ng-if="messages.length < 1" class="text-center" style="padding-top: 50%;">
+  <p style="color: gray;">This is your first chat with ...</p>
+</div>
+
 <div ng-repeat="message in messages" class="message-wrapper"
 on-hold="onMessageHold($event, $index, message)">
 

@@ -9,13 +9,13 @@
         <div class="row">
           <div class="col  text-center">
 
-              <b><h1 class="energized">3</h1></b>
+              <b><h1 class="energized">{{appointments.pending.length}}</h1></b>
               <b>Pending</b>
 
 
           </div>
           <div class="col text-center">
-              <b><h1 class="positive">7</h1></b>
+              <b><h1 class="positive">{{appointments.accepted.length}}</h1></b>
               <b>Accepted</b>
           </div>
         </div>
@@ -25,13 +25,13 @@
           <div class="row">
             <div class="col  text-center">
 
-              <b><h1 class="balanced">30</h1></b>
+              <b><h1 class="balanced">{{appointments.completed.length}}</h1></b>
               <b>Completed</b>
 
 
             </div>
             <div class="col text-center">
-              <b><h1 class="assertive" >4</h1></b>
+              <b><h1 class="assertive" >{{appointments.canceled.length}}</h1></b>
               <b>Canceled</b>
             </div>
           </div>

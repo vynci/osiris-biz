@@ -40,6 +40,7 @@ app.config(function($stateProvider, $urlRouterProvider) {
     url: '/tab',
     abstract: true,
     templateUrl: 'templates/tabs.html',
+    controller: 'MainCtrl'
   })
 
   // Each tab has its own nav history stack:
@@ -65,7 +66,7 @@ app.config(function($stateProvider, $urlRouterProvider) {
     })
 
   .state('tab.chat-detail', {
-    url: '/chats/:chatId',
+    url: '/chats/:chatId/:customerId',
     views: {
       'tab-chats': {
         templateUrl: 'templates/chat-detail.html',

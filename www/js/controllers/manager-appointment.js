@@ -116,7 +116,10 @@ app.controller('ManagerAppointmentCtrl', function($scope, $ionicPopup, appointme
 			// Handle the result
 			console.log(results);
 			angular.forEach(results, function(appointment) {
-				$scope.appointments[appointment.get('status')].push(appointment);
+				if(appointment.get('status')){
+					$scope.appointments[appointment.get('status')].push(appointment);
+				}
+
 				console.log($scope.appointments);
 			});
 

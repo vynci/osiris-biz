@@ -1,10 +1,12 @@
-<ion-view view-title="Chats">
+<ion-view view-title="Inbox">
   <ion-content>
     <ion-list>
-      <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="chat in chats" type="item-text-wrap" href="#/tab/chats/{{chat.id}}">
-        <img ng-src="{{chat.face}}">
-        <h2>{{chat.name}}</h2>
-        <p>{{chat.lastText}}</p>
+      <ion-item class="item-avatar item-icon-right" ng-repeat="thread in threads" type="item-text-wrap" href="#/tab/chats/{{thread.id}}/{{thread.attributes.customerInfo.id}}">
+        <img ng-src="{{thread.attributes.customerInfo.avatar}}">
+        <h2>{{thread.attributes.customerInfo.firstName}} {{thread.attributes.customerInfo.lastName}}</h2>
+        <p>{{thread.attributes.lastMessage}}</p>
+        <!-- <p style="font-size: 11px;">{{thread.attributes.updatedAt.toString() | limitTo:21}}</p> -->
+        <span am-time-ago="thread.attributes.updatedAt" style="font-size: 11px;"></span>
         <i class="icon ion-chevron-right icon-accessory"></i>
 
         <ion-option-button class="button-assertive" ng-click="remove(chat)">

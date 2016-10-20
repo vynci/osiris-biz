@@ -12,7 +12,8 @@
 
         <a class="item item-button-right" ng-repeat="pendingAppointment in appointments.pending">
           {{pendingAppointment.attributes.customerInfo.firstName}} {{pendingAppointment.attributes.customerInfo.lastName}} <br>
-          <p>{{pendingAppointment.attributes.createdAt.toString() | limitTo:21}}</p>
+          <!-- <p>{{pendingAppointment.attributes.createdAt.toString() | limitTo:21}}</p> -->
+          <span am-time-ago="pendingAppointment.attributes.createdAt" style="font-size: 11px;"></span>
           <button class="button button-positive" ng-click="showBookingAlert(pendingAppointment, 'Accept')">
             View
           </button>
@@ -57,7 +58,7 @@
       <a class="item item-button-right" ng-repeat="canceledAppointment in appointments.canceled">
         {{canceledAppointment.attributes.customerInfo.firstName}} {{canceledAppointment.attributes.customerInfo.lastName}}
         <button class="button button-assertive">
-          <i class="icon ion-trash-a"></i>
+          Restore
         </button>
       </a>
       <div style="background: #ef473a; color: white;" class="item item-divider text-center">

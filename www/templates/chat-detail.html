@@ -17,7 +17,7 @@ Submit
 
 <ion-view id="userMessagesView"
 cache-view="false"
-view-title="Message">
+view-title="Chat with {{toUser.username}}">
 
 <div class="loader-center" ng-if="!doneLoading">
   <div class="loader">
@@ -28,46 +28,45 @@ view-title="Message">
 <ion-content has-bouncing="true" class="has-header has-footer"
 delegate-handle="userMessageScroll">
 
-<div ng-if="messages.length < 1" class="text-center" style="padding-top: 50%;">
+<!-- <div ng-if="messages.length < 1" class="text-center" style="padding-top: 50%;">
   <p style="color: gray;">This is your first chat with ...</p>
-</div>
+</div> -->
 
 <div ng-repeat="message in messages" class="message-wrapper"
 on-hold="onMessageHold($event, $index, message)">
 
-<div ng-if="user._id !== message.userId">
+<div ng-if="user._id !== message.attributes.userId">
 
   <img ng-click="viewProfile(message)" class="profile-pic left"
   ng-src="{{toUser.pic}}" onerror="onProfilePicError(this)" />
 
   <div class="chat-bubble left">
 
-    <div class="message" ng-bind-html="message.text | nl2br" autolinker>
+    <div class="message" ng-bind-html="message.attributes.message | nl2br" autolinker>
     </div>
 
     <div class="message-detail">
-      <span ng-click="viewProfile(message)"
-      class="bold">{{toUser.username}}</span>,
-      <span am-time-ago="message.date"></span>
+      <!-- <span ng-click="viewProfile(message)" class="bold">{{toUser.username}}</span><br> -->
+      <span am-time-ago="message.attributes.createdAt" style="font-size: 11px;"></span>
     </div>
 
   </div>
 </div>
 
-<div ng-if="user._id === message.userId">
+<div ng-if="user._id === message.attributes.userId">
 
   <img ng-click="viewProfile(message)" class="profile-pic right"
   ng-src="{{user.pic}}" onerror="onProfilePicError(this)" />
 
   <div class="chat-bubble right">
 
-    <div class="message" ng-bind-html="message.text | nl2br" autolinker>
+    <div class="message" ng-bind-html="message.attributes.message | nl2br" autolinker>
     </div>
 
     <div class="message-detail">
-      <span ng-click="viewProfile(message)"
-      class="bold">{{user.username}}</span>,
-      <span am-time-ago="message.date"></span>
+      <!-- <span ng-click="viewProfile(message)" class="bold">{{user.username}}</span><br> -->
+      <span am-time-ago="message.attributes.createdAt" style="font-size: 11px;"></span>
+      <span ng-show="message.attributes.isFail" style="font-size: 11px; color: red;">Failed to Send</span>
     </div>
 
   </div>

@@ -58,6 +58,27 @@ app.controller('ManagerAppointmentCtrl', function($scope, $ionicPopup, appointme
 
 	};
 
+	$scope.restoreAppointment = function(appointment, isCompleted){
+		console.log('decline!');
+		var confirmPopup = $ionicPopup.confirm({
+			title: '<b>Restore Booking</b>',
+			template: 'Are you sure you want to <b style="color:yellow;">RESTORE?</b>'
+		});
+
+		confirmPopup.then(function(res) {
+			if(res) {
+				if(isCompleted){
+					setAppointment(appointment, 'accepted', 'Accepted');
+				}else{
+					setAppointment(appointment, 'pending', 'Pending');
+				}
+
+			} else {
+				console.log('You are not sure');
+			}
+		});
+	}
+
 	$scope.declineAppointment = function(appointment){
 		console.log('decline!');
 		var confirmPopup = $ionicPopup.confirm({

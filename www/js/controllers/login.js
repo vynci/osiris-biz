@@ -1,4 +1,4 @@
-app.controller('LoginCtrl', function($scope, $ionicLoading, $rootScope, $ionicHistory, $state) {
+app.controller('LoginCtrl', function($scope, $ionicLoading, $rootScope, $ionicHistory, $state, $ionicPopup) {
 	console.log('login!');
 	var userId = '';
 	$scope.loginData = {};

@@ -12,13 +12,13 @@
 
     <div class="row" ng-repeat="image in artistPortfolio" ng-if="$index % 3 === 0">
       <div class="col col-33" ng-if="$index < artistPortfolio.length">
-        <img ng-click="viewPortfolio(artistPortfolio[$index].attributes)" ng-src="{{artistPortfolio[$index].attributes.imagePath}}" spinkit-image-preloader='chasing-dots-spinner' width="100%" />
+        <img ng-click="viewPortfolio(artistPortfolio[$index])" ng-src="{{artistPortfolio[$index].attributes.imagePath}}" spinkit-image-preloader='chasing-dots-spinner' width="100%" />
       </div>
       <div class="col col-33" ng-if="$index + 1 < artistPortfolio.length">
-        <img ng-click="viewPortfolio(artistPortfolio[$index + 1].attributes)"ng-src="{{artistPortfolio[$index + 1].attributes.imagePath}}" spinkit-image-preloader='chasing-dots-spinner' width="100%" />
+        <img ng-click="viewPortfolio(artistPortfolio[$index + 1])"ng-src="{{artistPortfolio[$index + 1].attributes.imagePath}}" spinkit-image-preloader='chasing-dots-spinner' width="100%" />
       </div>
       <div class="col col-33" ng-if="$index + 2 < artistPortfolio.length">
-        <img ng-click="viewPortfolio(artistPortfolio[$index + 2].attributes)" ng-src="{{artistPortfolio[$index + 2].attributes.imagePath}}" spinkit-image-preloader='chasing-dots-spinner' width="100%" />
+        <img ng-click="viewPortfolio(artistPortfolio[$index + 2])" ng-src="{{artistPortfolio[$index + 2].attributes.imagePath}}" spinkit-image-preloader='chasing-dots-spinner' width="100%" />
       </div>
     </div>
   </ion-content>

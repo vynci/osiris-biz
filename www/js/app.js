@@ -5,7 +5,7 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-var app = angular.module('starter', ['ionic', 'ui.rCalendar', 'pubnub.angular.service', 'ion-datetime-picker', 'ionic.rating', 'angularMoment'])
+var app = angular.module('starter', ['ionic', 'ui.rCalendar', 'pubnub.angular.service', 'ion-datetime-picker', 'ionic.rating', 'angularMoment', 'ngCordova'])
 
 app.run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -22,16 +22,18 @@ app.run(function($ionicPlatform) {
     }
   });
 
-  Parse.initialize("myAppId");
+  Parse.initialize("myAppId", "myRestAPIKey");
   Parse.serverURL = 'https://muse-rest-api.herokuapp.com/parse';
 })
 
-app.config(function($stateProvider, $urlRouterProvider) {
+app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
 
   // Ionic uses AngularUI Router which uses the concept of states
   // Learn more here: https://github.com/angular-ui/ui-router
   // Set up the various states which the app can be in.
   // Each state's controller can be found in controllers.js
+  $ionicConfigProvider.tabs.position('bottom');
+
   $stateProvider
 
   // setup an abstract state for the tabs directive

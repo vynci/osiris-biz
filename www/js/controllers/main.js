@@ -9,10 +9,10 @@ app.controller('MainCtrl', function($scope, $ionicPopup, Pubnub, $pubnubChannel,
 		if(Parse.User.current()){
 			user.id = Parse.User.current().get('profileId');
 		}else{
-			$ionicHistory.nextViewOptions({
-				disableBack: true
-			});
-			$state.transitionTo('tab.account-login', null, {reload: true, notify:true});
+			// $ionicHistory.nextViewOptions({
+			// 	disableBack: true
+			// });
+			// $state.transitionTo('tab.account-login', null, {reload: true, notify:true});
 		}
 	});
 

@@ -99,9 +99,12 @@ app.controller('ManagerPortfolioCtrl', function($scope, serviceService, $ionicLo
 			scope: $scope,
 			buttons: [
 				{ text: 'Close' },
-      	{
-					text: 'Delete' ,
-				  type: 'button-assertive'
+      	        {
+				    text: 'Delete' ,
+				    type: 'button-assertive',
+					onTap: function(e) {
+						deletePortfolio(portfolio);
+					}                    
 				},
 				{
 					text: '<b>Save</b>',
@@ -170,14 +173,62 @@ app.controller('ManagerPortfolioCtrl', function($scope, serviceService, $ionicLo
 					}
 				}
 			]
-			});
+		});
 
-
-			myPopup.then(function(res) {
-				console.log('Tapped!', res);
-			});
+        myPopup.then(function(res) {
+            console.log('Tapped!', res);
+        });
 
 	};
+    
+    function deletePortfolio(portfolio){        
+        
+		var confirmPopup = $ionicPopup.confirm({
+			title: 'Service',
+			template: 'Are you sure you want to delete this portfolio?',
+			okText: 'Yes, I am sure!', // String (default: 'OK'). The text of the OK button.
+			okType: 'button-assertive', // String (default: 'button-positive'). The type of the OK button.
+		});
+
+		confirmPopup.then(function(res) {
+			if(res) {
+
+                $ionicLoading.show({
+                    template: 'Loading...'
+                }).then(function(){
+
+                });
+                
+				portfolio.destroy({
+					success: function(myObject) {
+						// The object was deleted from the Parse Cloud.
+						$ionicLoading.hide();
+						var alertPopup = $ionicPopup.alert({
+							title: 'Portfolio',
+							template: 'Portfolio Successfully Deleted'
+						});
+
+						alertPopup.then(function(res) {
+							getPortfolioById(Parse.User.current().get('profileId'));
+						});
+					},
+					error: function(myObject, error) {
+						$ionicLoading.hide();
+						var alertPopup = $ionicPopup.alert({
+							title: 'Portfolio',
+							template: 'Portfolio: Delete Failed'
+						});
+
+						alertPopup.then(function(res) {
+							getPortfolioById(Parse.User.current().get('profileId'));
+						});
+					}
+				});
+			} else {
+				console.log('You are not sure');
+			}
+		});        
+    }
 
 	function savePortfolio(imagePath, description, id){
 
@@ -221,7 +272,7 @@ app.controller('ManagerPortfolioCtrl', function($scope, serviceService, $ionicLo
 				// Execute any logic that should take place if the save fails.
 				// error is a Parse.Error with an error code and message.
 
-				getServiceById(userId);
+				getPortfolioById(Parse.User.current().get('profileId'));
 				var alertPopup = $ionicPopup.alert({
 					title: 'Portfolio',
 					template: 'Portfolio: Add Failed'

@@ -1,4 +1,4 @@
-app.controller('AccountCtrl', function($scope, $ionicLoading, $rootScope, artistService, $ionicPopup, $ionicHistory, $state) {
+app.controller('AccountCtrl', function($scope, $ionicLoading, $rootScope, artistService, $ionicPopup, $ionicHistory, $state, $cordovaCamera) {
 	var userId = '';
 
 	$scope.profile = {
@@ -23,9 +23,129 @@ app.controller('AccountCtrl', function($scope, $ionicLoading, $rootScope, artist
         }
 	});
 
+	document.addEventListener("deviceready", function () {
+		var options = {
+			quality: 100,
+			destinationType: Camera.DestinationType.DATA_URL,
+			sourceType: Camera.PictureSourceType.CAMERA,
+			allowEdit: true,
+			encodingType: Camera.EncodingType.JPEG,
+			targetWidth: 200,
+			targetHeight: 200,
+			popoverOptions: CameraPopoverOptions,
+			saveToPhotoAlbum: false,
+			correctOrientation:true,
+			cameraDirection : 0
+		};
+
+		$scope.takePicture = function(){
+			options.sourceType = Camera.PictureSourceType.CAMERA;
+			$cordovaCamera.getPicture(options).then(function(imageData) {
+				var file = imageData;
+				var uploadFile = new Parse.File('image.jpg', {base64 : file});
+
+				uploadFile.save().then(function(result) {
+					// The file has been saved to Parse.
+					console.log(result);
+					updateAvatar(result._url);
+				}, function(error) {
+					// The file either could not be read, or could not be saved to Parse.
+				});
+
+			}, function(err) {
+				// error
+			});
+		}
+
+		$scope.getFromGallery = function(){
+			options.sourceType = Camera.PictureSourceType.PHOTOLIBRARY;
+			$cordovaCamera.getPicture(options).then(function(imageData) {
+				var file = imageData;
+				var uploadFile = new Parse.File('image.jpg', {base64 : file});
+
+				uploadFile.save().then(function(result) {
+					// The file has been saved to Parse.
+					console.log(result);
+					updateAvatar(result._url);
+				}, function(error) {
+					// The file either could not be read, or could not be saved to Parse.
+				});
+
+			}, function(err) {
+				// error
+			});
+		}
+	}, false);
+
 	$scope.updateProfile = function(){
 		updateProfile(false);
 	};
+    
+	$scope.showUploadOption = function() {
+		$scope.data = {};
+
+		// An elaborate, custom popup
+		var myPopup = $ionicPopup.show({
+			template: '',
+			title: '<b>Choose</b>',
+			subTitle: '',
+			scope: $scope,
+			buttons: [
+				{ text: 'Close' },
+				{
+					text: '<b>Camera</b>',
+					type: 'button-energized',
+					onTap: function(e) {
+						$scope.takePicture();
+					}
+				},
+				{
+					text: '<b>Gallery</b>',
+					type: 'button-balanced',
+					onTap: function(e) {
+						$scope.getFromGallery();
+					}
+				}
+			]
+		});
+
+        myPopup.then(function(res) {
+            console.log('Tapped!', res);
+        });
+
+	};    
+    
+    function updateAvatar(url){
+        $ionicLoading.show({
+            template: 'Loading...'
+        }).then(function(){
+
+        });
+        
+		$scope.artistProfile.set("avatar", url);
+
+		$scope.artistProfile.save(null, {
+			success: function(result) {
+				// Execute any logic that should take place after the object is saved.
+				$ionicLoading.hide();
+				var alertPopup = $ionicPopup.alert({
+					title: 'Profile Picture Update',
+					template: 'Your profile picture has been successfully updated.'
+				});
+
+				alertPopup.then(function(res) {
+					$scope.profile.icon = url;
+				});
+
+			},
+			error: function(gameScore, error) {
+				// Execute any logic that should take place if the save fails.
+				// error is a Parse.Error with an error code and message.
+				$ionicLoading.hide();
+				console.log(error);
+			}
+		});        
+    }
 
 	function getArtistById(id){
 		artistService.getArtistById(id)

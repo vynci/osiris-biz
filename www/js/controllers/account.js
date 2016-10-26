@@ -5,6 +5,8 @@ app.controller('AccountCtrl', function($scope, $ionicLoading, $rootScope, artist
 
 	}
 
+	$scope.placeholder = 'img/placeholder.png'
+
 	$scope.$on('$ionicView.enter', function(e) {
         if(Parse.User.current()){
             userId = Parse.User.current().get('profileId');
@@ -14,7 +16,7 @@ app.controller('AccountCtrl', function($scope, $ionicLoading, $rootScope, artist
 
             });
 
-            getArtistById(userId);
+            getArtistById(Parse.User.current().get('profileId'));
         }else{
             $ionicHistory.nextViewOptions({
                 disableBack: true
@@ -80,7 +82,7 @@ app.controller('AccountCtrl', function($scope, $ionicLoading, $rootScope, artist
 	$scope.updateProfile = function(){
 		updateProfile(false);
 	};
-    
+
 	$scope.showUploadOption = function() {
 		$scope.data = {};
 
@@ -113,15 +115,15 @@ app.controller('AccountCtrl', function($scope, $ionicLoading, $rootScope, artist
             console.log('Tapped!', res);
         });
 
-	};    
-    
+	};
+
     function updateAvatar(url){
         $ionicLoading.show({
             template: 'Loading...'
         }).then(function(){
 
         });
-        
+
 		$scope.artistProfile.set("avatar", url);
 
 		$scope.artistProfile.save(null, {
@@ -134,7 +136,7 @@ app.controller('AccountCtrl', function($scope, $ionicLoading, $rootScope, artist
 				});
 
 				alertPopup.then(function(res) {
-					$scope.profile.icon = url;
+					getArtistById(Parse.User.current().get('profileId'));
 				});
 
 			},
@@ -144,7 +146,7 @@ app.controller('AccountCtrl', function($scope, $ionicLoading, $rootScope, artist
 				$ionicLoading.hide();
 				console.log(error);
 			}
-		});        
+		});
     }
 
 	function getArtistById(id){

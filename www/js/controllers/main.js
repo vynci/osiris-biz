@@ -42,44 +42,112 @@ app.controller('MainCtrl', function($scope, $ionicPopup, Pubnub, $pubnubChannel,
 
 	};
 
-	$scope.showBookingAlert = function() {
-		$scope.data = {};
+	$scope.acceptAppointment = function(appointment){
+		var confirmPopup = $ionicPopup.confirm({
+			title: '<b>Accept Booking</b>',
+			template: 'Are you sure you want to <b style="color:blue;">ACCEPT?</b>'
+		});
 
+		confirmPopup.then(function(res) {
+			if(res) {
+				setAppointment(appointment, 'accepted', 'Accepted');
+			} else {
+				console.log('You are not sure');
+			}
+		});
+	}
+
+	$scope.showBookingAlert = function(booking) {
+		$scope.data = {};
+		console.log(booking);
 		// An elaborate, custom popup
+		var customer = booking.content;
+		var avatar = customer.customerInfo.avatar || 'img/placeholder.png';
 		var myPopup = $ionicPopup.show({
-			template: '<div style="padding: 0px 100px;"><img style="width:100%; border-radius: 50%";" src="img/portfolio/a.jpg"><br><div style="text-align:center;"><button class="button button-small button-blocked button-calm"><i class="icon ion-ios-email"> SMS</i></button>   <button class="button button-small button-balanced"><i class="icon ion-ios-telephone"> Call</i></button></div></div> <br>Name: Arya Stark <br>Location: Mandaue, Cebu City<br>Contact: +639272326087<br> Schedule: October 21, 2016 9:00 AM <br> Total Bill: P300',
+			template: '<div style="padding: 0px 100px;"><img style="width:100%; border-radius: 50%";" src="' + avatar + '"></div><div style="text-align:center;"><button class="button button-small button-blocked button-energized"><i class="icon ion-chatboxes"> Chat</i></button> <button class="button button-small button-blocked button-calm" ng-click="contact()"><i class="icon ion-ios-email"> SMS</i></button>   <button class="button button-small button-balanced"><i class="icon ion-ios-telephone"> Call</i></button></div> <br>Name: ' + customer.customerInfo.firstName + ' ' + customer.customerInfo.lastName +'<br>Location: Mandaue, Cebu City<br>Contact: ' + customer.customerInfo.contactNumber +'<br> Schedule: ' + customer.schedule.iso.toString() +' <br> Total Bill: P' + customer.totalBill,
 			title: '<b>You have a new booking!</b>',
 			subTitle: '',
 			scope: $scope,
 			buttons: [
-		{ text: 'Close' },
-	{
-		text: '<b>Chat</b>',
-		type: 'button-energized',
-		onTap: function(e) {
-			$scope.showContactOption();
-		}
-	},
-	{
-		text: '<b>Accept</b>',
-		type: 'button-balanced',
-		onTap: function(e) {
-			if (!$scope.data.wifi) {
-				//don't allow the user to close unless he enters wifi password
-				e.preventDefault();
-			} else {
-				return $scope.data.wifi;
-			}
-		}
-	}
-	]
-	});
+				{ text: 'Close' },
+				{
+					text: '<b>View</b>',
+					type: 'button-positive',
+					onTap: function(e) {
+						$state.go('tab.manage-appointments');
+					}
+				},
+				{
+					text: '<b>Accept</b>',
+					type: 'button-balanced',
+					onTap: function(e) {
+						$scope.acceptAppointment(customer);
+					}
+				}
+			]
+		});
 
-	myPopup.then(function(res) {
-		console.log('Tapped!', res);
-	});
+		myPopup.then(function(res) {
+			console.log('Tapped!', res);
+		});
 
 	};
+
+	function setAppointment(booking, status, type){
+		var Appointment = Parse.Object.extend("Booking");
+		var appointment = new Appointment();
+
+		appointment.id = booking.objectId;
+
+		appointment.set("status", status);
+
+		appointment.save(null, {
+			success: function(result) {
+
+				var myPopup = $ionicPopup.show({
+					template: '<b>Booking Successfully Accepted!</b>',
+					title: 'Booking',
+					subTitle: '',
+					scope: $scope,
+					buttons: [
+						{ text: 'Close' },
+						{
+							text: '<b>Calendar</b>',
+							type: 'button-positive',
+							onTap: function(e) {
+								$state.go('tab.manage-schedule-calendar');
+							}
+						},
+						{
+							text: '<b>List</b>',
+							type: 'button-balanced',
+							onTap: function(e) {
+								$state.go('tab.manage-appointments');
+							}
+						}
+						]
+				});
+
+				myPopup.then(function(res) {
+					console.log('Tapped!', res);
+				});
+
+			},
+			error: function(gameScore, error) {
+				// Execute any logic that should take place if the save fails.
+				// error is a Parse.Error with an error code and message.
+				$ionicLoading.hide();
+				var alertPopup = $ionicPopup.alert({
+					title: 'Booking',
+					template: 'Booking Error on Complete, Please try again'
+				});
+
+				alertPopup.then(function(res) {
+
+				});
+			}
+		});
+	}
 
 	$scope.bookingAlertChannel = 'book/' + user.id;
 	$scope.messageAlertChannel = 'message/' + user.id;
@@ -95,7 +163,7 @@ app.controller('MainCtrl', function($scope, $ionicPopup, Pubnub, $pubnubChannel,
 
 	Pubnub.subscribe({
 		channel: $scope.bookingAlertChannel,
-		triggerEvents: ['callback'],
+		triggerEvents: ['callback', 'connect', 'disconnect'],
 		connect : function() {
 			// send a message
 			console.log('hello');
@@ -104,7 +172,7 @@ app.controller('MainCtrl', function($scope, $ionicPopup, Pubnub, $pubnubChannel,
 
 	Pubnub.subscribe({
 		channel: $scope.messageAlertChannel,
-		triggerEvents: ['callback'],
+		triggerEvents: ['callback', 'connect', 'disconnect'],
 		connect : function() {
 			// send a message
 			console.log('hello');
@@ -125,8 +193,16 @@ app.controller('MainCtrl', function($scope, $ionicPopup, Pubnub, $pubnubChannel,
 		}else{
 			$rootScope.getStreamMessage(m);
 		}
-
 	});
 
+	$rootScope.$on(Pubnub.getEventNameFor('subscribe', 'connect'), function (ngEvent, payload) {
+		$rootScope.isPubnubOnline = 'Online';
+		console.log('online');
+	});
+
+	$rootScope.$on(Pubnub.getEventNameFor('subscribe', 'disconnect'), function (ngEvent, payload) {
+		$rootScope.isPubnubOnline = 'Offline';
+		console.log('offline');
+	});
 
 });

@@ -23,8 +23,10 @@ app.controller('ManagerAppointmentCtrl', function($scope, $ionicPopup, appointme
 	$scope.showBookingAlert = function(customer, actionType, buttonType) {
 			$scope.data = {};
 			// An elaborate, custom popup
+			var avatar = customer.get('customerInfo').avatar || 'img/placeholder.png';
+
 			var myPopup = $ionicPopup.show({
-				template: '<div style="padding: 0px 100px;"><img style="width:100%; border-radius: 50%";" src="img/portfolio/d.jpg"></div><div style="text-align:center;"><button class="button button-small button-blocked button-energized"><i class="icon ion-chatboxes"> Chat</i></button> <button class="button button-small button-blocked button-calm" ng-click="contact()"><i class="icon ion-ios-email"> SMS</i></button>   <button class="button button-small button-balanced"><i class="icon ion-ios-telephone"> Call</i></button></div> <br>Name: ' + customer.get('customerInfo').firstName + ' ' + customer.get('customerInfo').lastName +'<br>Location: Mandaue, Cebu City<br>Contact: ' + customer.get('customerInfo').contactNumber +'<br> Schedule: ' + customer.get('schedule') +' <br> Total Bill: P' + customer.get('totalBill'),
+				template: '<div style="padding: 0px 100px;"><img style="width:100%; border-radius: 50%";" src="' + avatar + '"></div><div style="text-align:center;"><button class="button button-small button-blocked button-energized"><i class="icon ion-chatboxes"> Chat</i></button> <button class="button button-small button-blocked button-calm" ng-click="contact()"><i class="icon ion-ios-email"> SMS</i></button>   <button class="button button-small button-balanced"><i class="icon ion-ios-telephone"> Call</i></button></div> <br>Name: ' + customer.get('customerInfo').firstName + ' ' + customer.get('customerInfo').lastName +'<br>Location: Mandaue, Cebu City<br>Contact: ' + customer.get('customerInfo').contactNumber +'<br> Schedule: ' + customer.get('schedule') +' <br> Total Bill: P' + customer.get('totalBill'),
 				title: '<b>Booking Details</b>',
 				subTitle: '',
 				scope: $scope,

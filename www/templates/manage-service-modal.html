@@ -1,38 +1,69 @@
 <ion-modal-view>
 	<ion-header-bar>
-		<h1 class="title">Add Service</h1>
+		<div class="buttons">
+			<button class="button button-icon icon ion-chevron-left blush-brown" ng-click="closeModal()">
+			</button>
+		</div>
+		<h1 class="title">{{serviceType}}</h1>
+
 	</ion-header-bar>
 	<ion-content>
-		<div class="list" style="padding-right: 20px;">
+		<div class="row" style="padding: 0px;">
+			<div class="col" style="padding: 0px;">
+				<label class="item" style="border-top-width: 0px;"  ng-if="isModalEdit">
+					<button class="button button-block button-positive" ng-click="updateService()">Save</button>
+				</label>
+			</div>
+			<div class="col" style="padding: 0px;">
+				<label class="item" style="border-top-width: 0px;" ng-if="isModalEdit">
+					<button class="button button-block button-assertive" ng-click="deleteService()">Delete</button>
+				</label>
+			</div>
+		</div>
+		<div class="list" style="padding-right: 20px; margin-bottom: 0px; border-bottom-color: #B3A5A5; border-bottom-width: 2px !important; border-bottom-style: dashed;">
 			<label class="item item-input item-floating-label">
 				<span class="input-label">Service Name</span>
 				<input type="text" ng-model="service.name" placeholder="Service Name">
 			</label>
-			<label class="item item-input item-floating-label">
-				<span class="input-label">Duration(mins)</span>
-				<input type="number" ng-model="service.duration" placeholder="Duration(mins)">
-			</label>
-			<label class="item item-input item-floating-label">
-				<span class="input-label">Price(PHP)</span>
-				<input type="number" ng-model="service.price" placeholder="Price(PHP)">
-			</label>
+			<div class="row" style="padding: 0px;">
+				<div class="col" style="padding: 0px;">
+					<label class="item item-input item-floating-label">
+						<span class="input-label">Duration(mins)</span>
+						<input type="number" ng-model="service.duration" placeholder="Duration(mins)">
+					</label>
+				</div>
+				<div class="col" style="padding: 0px;">
+					<label class="item item-input item-floating-label">
+						<span class="input-label">Price(PHP)</span>
+						<input type="number" ng-model="service.price" placeholder="Price(PHP)">
+					</label>
+				</div>
+			</div>
+
 			<label class="item item-input item-floating-label">
 				<span class="input-label">Description</span>
-				<textarea ng-model="service.description" name="" id="" cols="30" rows="10" style="box-sizing: border-box; border-color: gray; width:100%; border-width: 1px; border-style: solid;" ng-model="rating.review" placeholder="Description">
+				<textarea ng-model="service.description" name="" id="" cols="30" rows="5" style="box-sizing: border-box; border-color: gray; width:100%; border-width: 1px; border-style: solid;" ng-model="rating.review" placeholder="Description">
 				</textarea>
 			</label>
+			<br>
 		</div>
-		<label class="item" style="border-top-width: 0px;"  ng-if="!isModalEdit">
-			<button class="button button-block button-balanced" ng-click="createService()">Save</button>
-		</label>
-		<label class="item" style="border-top-width: 0px;"  ng-if="isModalEdit">
-			<button class="button button-block button-positive" ng-click="updateService()">Update</button>
-		</label>
+		<br>
+		<div class="row" style="padding-left: 3%; padding-right: 3%;" ng-if="isModalEdit">
+			<div class="col"><img ng-if="service.servicePhotos[0].path" ng-src="{{service.servicePhotos[0].path}}" alt="" style="width: 100%;" ng-click="viewServicePhoto(service.servicePhotos[0].path, 0)"></div>
+			<div class="col"><img ng-if="service.servicePhotos[1].path" ng-src="{{service.servicePhotos[1].path}}" alt="" style="width: 100%;" ng-click="viewServicePhoto(service.servicePhotos[1].path, 1)"></div>
+			<div class="col"><img ng-if="service.servicePhotos[2].path" ng-src="{{service.servicePhotos[2].path}}" alt="" style="width: 100%;" ng-click="viewServicePhoto(service.servicePhotos[2].path, 2)"></div>
+			<div class="col"><img ng-if="service.servicePhotos[3].path" ng-src="{{service.servicePhotos[3].path}}" alt="" style="width: 100%;" ng-click="viewServicePhoto(service.servicePhotos[3].path, 3)"></div>
+			<div class="col"><img ng-if="service.servicePhotos[4].path" ng-src="{{service.servicePhotos[4].path}}" alt="" style="width: 100%;" ng-click="viewServicePhoto(service.servicePhotos[4].path, 4)"></div>
+		</div>
+
 		<label class="item" style="border-top-width: 0px;" ng-if="isModalEdit">
-			<button class="button button-block button-assertive" ng-click="deleteService()">Delete</button>
+			<button class="button button-block button-royal" ng-click="showUploadOption()">Upload Service Photo</button>
 		</label>
-		<label class="item" style="border-top-width: 0px;">
-			<button class="button button-block button-stable" ng-click="closeModal()">Back</button>
+
+		<label class="item" style="border-top-width: 0px;"  ng-if="!isModalEdit">
+			<button class="button button-block button-balanced" ng-click="createService()">Create</button>
 		</label>
+
+
 	</ion-content>
 </ion-modal-view>

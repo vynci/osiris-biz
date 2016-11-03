@@ -1,6 +1,10 @@
-app.controller('LocationCtrl', function($scope, $ionicLoading, $ionicPopup, artistService, $ionicHistory) {
+app.controller('LocationCtrl', function($scope, $ionicLoading, $ionicPopup, artistService, $ionicHistory, $state) {
 
 	var marker;
+
+	$scope.position = {
+		search : ''
+	};
 
 	$scope.$on('$ionicView.enter', function(e) {
 		if(Parse.User.current()){
@@ -9,12 +13,20 @@ app.controller('LocationCtrl', function($scope, $ionicLoading, $ionicPopup, arti
 			}).then(function(){
 
 			});
-			getArtistById(Parse.User.current().get('profileId'));
+			getArtistById(Parse.User.current().get('artistId'));
 		}else{
 			$ionicHistory.nextViewOptions({
 				disableBack: true
 			});
 			$state.transitionTo('tab.account-login', null, {reload: true, notify:true});
+		}
+	});
+
+	$scope.$watch('position.search', function(value, old) {
+		console.log(value);
+		if(value.geometry){
+			// var point = new Parse.GeoPoint({latitude: value.geometry.location.lat(), longitude: value.geometry.location.lng()});
+			$scope.map.setCenter(new google.maps.LatLng( value.geometry.location.lat(), value.geometry.location.lng() ) );
 		}
 	});
 
@@ -26,7 +38,7 @@ app.controller('LocationCtrl', function($scope, $ionicLoading, $ionicPopup, arti
 			zoom: 15,
 			mapTypeId: google.maps.MapTypeId.ROADMAP,
 			mapTypeControl : false,
-			zoomControl : true,
+			zoomControl : false,
 			streetViewControl : false
 		};
 
@@ -66,7 +78,7 @@ app.controller('LocationCtrl', function($scope, $ionicLoading, $ionicPopup, arti
 
 		var Profile = Parse.Object.extend("Artist");
 		var profile = new Profile();
-		profile.id = Parse.User.current().get('profileId');
+		profile.id = Parse.User.current().get('artistId');
 		profile.set("coordinates", new Parse.GeoPoint({latitude: location.lat, longitude: location.lng}));
 
 		marker = new google.maps.Marker({

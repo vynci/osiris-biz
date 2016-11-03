@@ -5,7 +5,7 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-var app = angular.module('starter', ['ionic', 'ui.rCalendar', 'pubnub.angular.service', 'ion-datetime-picker', 'ionic.rating', 'angularMoment', 'ngCordova'])
+var app = angular.module('starter', ['ionic', 'ui.rCalendar', 'pubnub.angular.service', 'ion-datetime-picker', 'ionic.rating', 'angularMoment', 'ngCordova', 'ion-google-place'])
 
 app.run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -114,6 +114,16 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
       'tab-services': {
         templateUrl: 'templates/manage-services.html',
         controller : 'ManagerServicesCtrl'
+      }
+    }
+  })
+
+  .state('tab.services-services-details', {
+    url: '/manage-services/:serviceId',
+    views: {
+      'tab-services': {
+        templateUrl: 'templates/manage-service-detail.html',
+        controller: 'ManagerServicesCtrl'
       }
     }
   })

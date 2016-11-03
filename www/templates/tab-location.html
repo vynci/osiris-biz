@@ -1,5 +1,8 @@
-<ion-view view-title="My Location">
+<ion-view view-title="Set My Location">
   <ion-content>
+    <div style="padding: 3%; background: #574C4F;">
+      <ion-google-place placeholder="Enter Location Here..." ng-model="position.search" current-location="false"/>
+    </div>
     <div id="map" data-tap-disabled="true"></div>
   </ion-content>
 </ion-view>

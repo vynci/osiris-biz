@@ -1,6 +1,6 @@
-app.controller('ManagerAppointmentCtrl', function($scope, $ionicPopup, appointmentService, $ionicLoading) {
+app.controller('ManagerAppointmentCtrl', function($scope, $ionicPopup, appointmentService, $ionicLoading, artistService, threadService, $state) {
 	console.log('manager appointment controller');
-
+	var bookingPopup;
 	$scope.appointments = {
 		'completed' : [],
 		'accepted' : [],
@@ -8,7 +8,16 @@ app.controller('ManagerAppointmentCtrl', function($scope, $ionicPopup, appointme
 		'canceled' : []
 	};
 
+	$scope.listView = {
+		'completed' : 3,
+		'accepted' : 3,
+		'pending' : 3,
+		'canceled' : 3
+	}
+
 	$scope.$on('$ionicView.enter', function(e) {
+		$scope.isLoading = true;
+
 		if(Parse.User.current()){
 			clearAppointments();
 			getAppointments();
@@ -20,13 +29,41 @@ app.controller('ManagerAppointmentCtrl', function($scope, $ionicPopup, appointme
 		}
 	});
 
+	$scope.messageCustomer = function(){
+		var customer = $scope.currentCustomerSelected;
+
+		threadService.isThreadExist(customer.get('customerInfo').id, Parse.User.current().get('profileId'))
+		.then(function(results) {
+			// Handle the result
+			console.log(results);
+			bookingPopup.close();
+			if(results.length){
+				$state.go('tab.chat-detail', {customerId: customer.get('customerInfo').id, chatId: results[0].id});
+			}else{
+				console.log('create new thread');
+				getArtistProfile(customer);
+			}
+
+			return results;
+		}, function(err) {
+			// Error occurred
+			console.log(err);
+		}, function(percentComplete) {
+			console.log(percentComplete);
+		});
+	}
+
+	$scope.viewAll = function(listType, status){
+		$scope.listView[listType] = status;
+	}
+
 	$scope.showBookingAlert = function(customer, actionType, buttonType) {
 			$scope.data = {};
 			// An elaborate, custom popup
 			var avatar = customer.get('customerInfo').avatar || 'img/placeholder.png';
-
-			var myPopup = $ionicPopup.show({
-				template: '<div style="padding: 0px 100px;"><img style="width:100%; border-radius: 50%";" src="' + avatar + '"></div><div style="text-align:center;"><button class="button button-small button-blocked button-energized"><i class="icon ion-chatboxes"> Chat</i></button> <button class="button button-small button-blocked button-calm" ng-click="contact()"><i class="icon ion-ios-email"> SMS</i></button>   <button class="button button-small button-balanced"><i class="icon ion-ios-telephone"> Call</i></button></div> <br>Name: ' + customer.get('customerInfo').firstName + ' ' + customer.get('customerInfo').lastName +'<br>Location: Mandaue, Cebu City<br>Contact: ' + customer.get('customerInfo').contactNumber +'<br> Schedule: ' + customer.get('schedule') +' <br> Total Bill: P' + customer.get('totalBill'),
+			$scope.currentCustomerSelected = customer;
+			bookingPopup = $ionicPopup.show({
+				template: '<div style="padding: 0px 100px;"><img style="width:100%; border-radius: 50%";" src="' + avatar + '"></div><div style="text-align:center;"><button class="button button-small button-blocked button-energized" ng-click="messageCustomer()"><i class="icon ion-chatboxes"> Chat</i></button> <a class="button button-small button-blocked button-calm" href="sms:'+ customer.get('customerInfo').contactNumber +'""><i class="icon ion-ios-email"> SMS</i></a>   <a class="button button-small button-balanced" href="tel:'+ customer.get('customerInfo').contactNumber +'"><i class="icon ion-ios-telephone"> Call</i></a></div> <br>Name: ' + customer.get('customerInfo').firstName + ' ' + customer.get('customerInfo').lastName +'<br>Location: Mandaue, Cebu City<br>Contact: ' + customer.get('customerInfo').contactNumber +'<br> Schedule: ' + customer.get('schedule') +'<br>Selected Services: <span ng-repeat="service in currentCustomerSelected.attributes.selectedServices">{{service.name}}{{$last ? "" : ", "}}</span> <br> Total Bill: P' + customer.get('totalBill'),
 				title: '<b>Booking Details</b>',
 				subTitle: '',
 				scope: $scope,
@@ -54,10 +91,9 @@ app.controller('ManagerAppointmentCtrl', function($scope, $ionicPopup, appointme
 				]
 			});
 
-			myPopup.then(function(res) {
+			bookingPopup.then(function(res) {
 				console.log('Tapped!', res);
 			});
-
 	};
 
 	$scope.restoreAppointment = function(appointment, isCompleted){
@@ -127,14 +163,57 @@ app.controller('ManagerAppointmentCtrl', function($scope, $ionicPopup, appointme
 		});
 	}
 
-	function getAppointments(){
-		$ionicLoading.show({
-			template: 'Loading :)'
-		}).then(function(){
-			console.log("The loading indicator is now displayed");
+	function getArtistProfile(customer){
+		if(Parse.User.current()){
+			artistService.getArtistById(Parse.User.current().get('profileId'))
+			.then(function(results) {
+				// Handle the result
+				createNewThread(results[0], customer);
+
+
+				return results;
+			}, function(err) {
+				// Error occurred
+				console.log(err);
+			}, function(percentComplete) {
+				console.log(percentComplete);
+			});
+		}
+	}
+
+	function createNewThread(artist, customer){
+		var Thread = Parse.Object.extend("Thread");
+		var thread = new Thread();
+
+		thread.set("lastMessage", '');
+		thread.set("messages", []);
+		thread.set("artistInfo", {
+			"id": artist.id,
+			"firstName": artist.get('firstName'),
+			"lastName": artist.get('lastName'),
+			"avatar": artist.get('avatar')
 		});
 
-		appointmentService.getBookingsById(Parse.User.current().get('profileId'))
+		thread.set("customerInfo", {
+			"id": customer.get('customerInfo').id,
+			"firstName": customer.get('customerInfo').firstName,
+			"lastName": customer.get('customerInfo').lastName,
+			"avatar": customer.get('avatar') || 'img/placeholder.png'
+		});
+
+		thread.save(null, {
+			success: function(result) {
+				// Execute any logic that should take place after the object is saved.
+				console.log('last message success');
+				$state.go('tab.chat-detail', {customerId: customer.get('customerInfo').id, chatId: result.id});
+			},
+			error: function(gameScore, error) {
+			}
+		});
+	}
+
+	function getAppointments(){
+		appointmentService.getBookingsById(Parse.User.current().get('artistId'))
 		.then(function(results) {
 			// Handle the result
 			console.log(results);
@@ -143,12 +222,11 @@ app.controller('ManagerAppointmentCtrl', function($scope, $ionicPopup, appointme
 					$scope.appointments[appointment.get('status')].push(appointment);
 				}
 
-				console.log($scope.appointments);
+				// console.log($scope.appointments);
 			});
 
-			$ionicLoading.hide();
+			$scope.isLoading = false;
 		}, function(err) {
-			$ionicLoading.hide();
 			// Error occurred
 			console.log(err);
 		}, function(percentComplete) {
@@ -167,7 +245,6 @@ app.controller('ManagerAppointmentCtrl', function($scope, $ionicPopup, appointme
 					title: '<b>Booking</b>',
 					template: 'Booking Successfully ' + type
 				});
-				$ionicLoading.hide();
 
 				alertPopup.then(function(res) {
 
@@ -177,7 +254,6 @@ app.controller('ManagerAppointmentCtrl', function($scope, $ionicPopup, appointme
 			error: function(gameScore, error) {
 				// Execute any logic that should take place if the save fails.
 				// error is a Parse.Error with an error code and message.
-				$ionicLoading.hide();
 				var alertPopup = $ionicPopup.alert({
 					title: 'Booking',
 					template: 'Booking Error on Complete, Please try again'

@@ -1,0 +1,27 @@
+<ion-modal-view>
+	<ion-header-bar>
+		<div class="buttons">
+			<button class="button button-icon icon ion-chevron-left blush-brown" ng-click="closeReviewModal()">
+			</button>
+		</div>
+		<h1 class="title">My Reviews</h1>
+
+	</ion-header-bar>
+	<ion-content>
+
+		<div class="list">
+			<a class="item item-avatar" ng-repeat="review in artistReviews">
+				<img ng-src="{{review.attributes.customerInfo.avatar}}">
+				<h2>{{review.attributes.customerInfo.firstName}} {{review.attributes.customerInfo.lastName}}</h2>
+				<p>{{review.attributes.description}}</p>
+				<div class="col" style="">
+					<i ng-class="review.attributes.ratings >= 1 ? 'ion-ios-heart' : 'ion-ios-heart-outline'" style="color:#ff6c8f;"></i>
+					<i ng-class="review.attributes.ratings >= 2 ? 'ion-ios-heart' : 'ion-ios-heart-outline'" style="color:#ff6c8f;"></i>
+					<i ng-class="review.attributes.ratings >= 3 ? 'ion-ios-heart' : 'ion-ios-heart-outline'" style="color:#ff6c8f;"></i>
+					<i ng-class="review.attributes.ratings >= 4 ? 'ion-ios-heart' : 'ion-ios-heart-outline'" style="color:#ff6c8f;"></i>
+					<i ng-class="review.attributes.ratings == 5 ? 'ion-ios-heart' : 'ion-ios-heart-outline'" style="color:#ff6c8f;"></i>
+				</div>
+			</a>
+		</div>
+	</ion-content>
+</ion-modal-view>

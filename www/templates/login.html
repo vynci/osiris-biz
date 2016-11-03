@@ -16,5 +16,9 @@
 			<button class="button button-block button-royal" ng-click="doLogin()">Login</button>
 		</div>
 
+		<div ng-if="isLoading" style="text-align: center; padding-top: 25%;">
+			<ion-spinner icon="spiral"></ion-spinner><br>
+			<span>Please Wait, Logging In...</span>
+		</div>
 	</ion-content>
 </ion-view>

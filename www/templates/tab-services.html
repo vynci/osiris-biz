@@ -1,41 +1,38 @@
 <ion-view view-title="Account Manager">
   <ion-content>
     <div style="font-size: 17px; text-align: center; background: white; border-bottom: 0px;" class="item item-divider">
-      <b>My Portfolio (9)</b>
+      <b>My Portfolio ({{artistPortfolio.length}})</b>
     </div>
-
-    <div class="row">
-      <div class="col"><img src="img/portfolio/a.jpg" alt="" style="width: 100%;"></div>
-      <div class="col"><img src="img/portfolio/b.jpg" alt="" style="width: 100%;"></div>
-      <div class="col"><img src="img/portfolio/c.jpg" alt="" style="width: 100%;"></div>
-      <div class="col"><img src="img/portfolio/d.jpg" alt="" style="width: 100%;"></div>
+    <div ng-if="isPortfolioLoading" style="text-align: center;">
+      <ion-spinner icon="spiral"></ion-spinner><br>
+      <span>Loading Portfolio...</span>
+    </div>
+    <div ng-if="artistPortfolio.length === 0"> <p style="padding-left: 15px; padding-right: 15px; text-align: center;">You have no portfolio yet, tap on "Manage Portfolio" to add.</p></div>
+    <div class="row" ng-if="artistPortfolio.length !== 0">
+      <div class="col"><img ng-src="{{artistPortfolio[0].attributes.imagePath}}" alt="" style="width: 100%;"></div>
+      <div class="col"><img ng-src="{{artistPortfolio[1].attributes.imagePath}}" alt="" style="width: 100%;"></div>
+      <div class="col"><img ng-src="{{artistPortfolio[2].attributes.imagePath}}" alt="" style="width: 100%;"></div>
+      <div class="col"><img ng-src="{{artistPortfolio[3].attributes.imagePath}}" alt="" style="width: 100%;"></div>
     </div>
     <div style="padding: 15px 15px; border-bottom-width: 1px; border-bottom-color: #444; border-bottom-style: dashed;">
       <a class="button button-block button-royal" href="#/tab/manage-portfolio">Manage Portfolio</a>
     </div>
-
-
-
-
     <br>
-
     <div style="font-size: 17px; text-align: center; background: white; border-bottom: 0px; border-top: 0px;" class="item item-divider">
-      <b>My Services (3)</b>
+      <b>My Services ({{artistServices.length}})</b>
     </div>
     <br>
-    <div class="list">
+    <div ng-if="isServiceLoading" style="text-align: center;">
+      <ion-spinner icon="spiral"></ion-spinner><br>
+      <span>Loading Services...</span>
+    </div>
+    <div ng-if="artistServices.length === 0"> <p style="padding-left: 15px; padding-right: 15px; text-align: center;">You have no services yet, tap on "Manage Services" to add.</p></div>
+    <div class="list" ng-if="artistServices.length !== 0">
 
-      <a class="item" href="#">
-        Fresh & Dewy
+      <a class="item" ng-repeat="service in artistServices | limitTo:2">
+        {{service.attributes.name}}
         <span class="item-note">
-          <span class="text-right"><b>Price</b>: P800</span>
-        </span>
-      </a>
-
-      <a class="item" href="#">
-        Modern Muse
-        <span class="item-note">
-          <span class="text-right"><b>Price</b>: P1500</span>
+          <span class="text-right"><b>Price</b>: {{service.attributes.price}}</span>
         </span>
       </a>
 
@@ -47,26 +44,33 @@
     <br>
 
     <div style="font-size: 17px; text-align: center; background: white; border-bottom: 0px; border-top: 0px;">
-      My Reviews (<b>17</b>)
+      My Reviews (<b>{{artistReviews.length}}</b>)
     </div>
     <br>
+    <div ng-if="isReviewLoading" style="text-align: center;">
+      <ion-spinner icon="spiral"></ion-spinner><br>
+      <span>Loading Reviews...</span>
+    </div>
+    <div ng-if="artistReviews.length === 0"> <p style="padding-left: 15px; padding-right: 15px; text-align: center;">You have no reviews yet.</p></div>
     <!-- <div ng-if="!artistReviews.length" class="item" style="text-align: center; white-space: normal;">Sorry, {{profile.firstName}} doesn't have any reviews yet.</div> -->
-    <div class="list">
-      <a class="item item-avatar" href="#">
-        <img src="img/ben.png">
-        <h2>Jamie Lannister</h2>
-        <p>Awesome Artist!</p>
+    <div class="list" ng-if="artistReviews.length !== 0">
+      <a class="item item-avatar" ng-repeat="review in artistReviews | limitTo:2">
+        <img ng-src="{{review.attributes.customerInfo.avatar}}">
+        <h2>{{review.attributes.customerInfo.firstName}} {{review.attributes.customerInfo.lastName}}</h2>
+        <p>{{review.attributes.description}}</p>
+        <div class="col" style="">
+          <i ng-class="review.attributes.ratings >= 1 ? 'ion-ios-heart' : 'ion-ios-heart-outline'" style="color:#ff6c8f;"></i>
+          <i ng-class="review.attributes.ratings >= 2 ? 'ion-ios-heart' : 'ion-ios-heart-outline'" style="color:#ff6c8f;"></i>
+          <i ng-class="review.attributes.ratings >= 3 ? 'ion-ios-heart' : 'ion-ios-heart-outline'" style="color:#ff6c8f;"></i>
+          <i ng-class="review.attributes.ratings >= 4 ? 'ion-ios-heart' : 'ion-ios-heart-outline'" style="color:#ff6c8f;"></i>
+          <i ng-class="review.attributes.ratings == 5 ? 'ion-ios-heart' : 'ion-ios-heart-outline'" style="color:#ff6c8f;"></i>
+        </div>
       </a>
 
-      <a class="item item-avatar" href="#">
-        <img src="img/mike.png">
-        <h2>Stannis Baratheon</h2>
-        <p>Thank You!</p>
-      </a>
     </div>
 
     <label class="item" style="border-top-width: 0px; border-bottom-width: 5px; padding-top: 0px;">
-      <button class="button button-block button-energized" ng-click="saveArtistProfile(picFile)">View All Reviews</button>
+      <button class="button button-block button-energized" ng-click="openReviewModal()">View All Reviews</button>
     </label>
 
   </ion-content>

@@ -5,7 +5,12 @@
           <h2>{{profile.firstName}} {{profile.lastName}}</h2>
           <p>{{profile.serviceType}}</p>
       </div>
-      <div class="list">
+      <div ng-if="isLoading" style="text-align: center; padding-top: 25%;">
+        <ion-spinner icon="spiral"></ion-spinner><br>
+        <span>Loading Account Information...</span>
+      </div>
+
+      <div class="list" ng-if="!isLoading">
         <div class="item item-divider">
           Personal Info
         </div>

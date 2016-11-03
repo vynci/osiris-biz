@@ -4,7 +4,7 @@ app.controller('ManagerPortfolioCtrl', function($scope, serviceService, $ionicLo
 	var userId = '';
 
 	if(Parse.User.current()){
-		userId = Parse.User.current().get('profileId');
+		userId = Parse.User.current().get('artistId');
 
 		$ionicLoading.show({
 			template: 'Loading...'
@@ -209,7 +209,7 @@ app.controller('ManagerPortfolioCtrl', function($scope, serviceService, $ionicLo
 						});
 
 						alertPopup.then(function(res) {
-							getPortfolioById(Parse.User.current().get('profileId'));
+							getPortfolioById(Parse.User.current().get('artistId'));
 						});
 					},
 					error: function(myObject, error) {
@@ -220,7 +220,7 @@ app.controller('ManagerPortfolioCtrl', function($scope, serviceService, $ionicLo
 						});
 
 						alertPopup.then(function(res) {
-							getPortfolioById(Parse.User.current().get('profileId'));
+							getPortfolioById(Parse.User.current().get('artistId'));
 						});
 					}
 				});
@@ -245,7 +245,7 @@ app.controller('ManagerPortfolioCtrl', function($scope, serviceService, $ionicLo
 			portfolio.id = id;
 		}else{
 			portfolio.set("imagePath", imagePath);
-			portfolio.set("ownerId", Parse.User.current().get('profileId'));
+			portfolio.set("ownerId", Parse.User.current().get('artistId'));
 		}
 
 		portfolio.set("description", description);
@@ -260,7 +260,7 @@ app.controller('ManagerPortfolioCtrl', function($scope, serviceService, $ionicLo
 					template: 'Successfully Saved!'
 				});
 
-				getPortfolioById(Parse.User.current().get('profileId'));
+				getPortfolioById(Parse.User.current().get('artistId'));
 
 				alertPopup.then(function(res) {
 
@@ -272,7 +272,7 @@ app.controller('ManagerPortfolioCtrl', function($scope, serviceService, $ionicLo
 				// Execute any logic that should take place if the save fails.
 				// error is a Parse.Error with an error code and message.
 
-				getPortfolioById(Parse.User.current().get('profileId'));
+				getPortfolioById(Parse.User.current().get('artistId'));
 				var alertPopup = $ionicPopup.alert({
 					title: 'Portfolio',
 					template: 'Portfolio: Add Failed'

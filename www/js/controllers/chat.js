@@ -5,10 +5,10 @@ app.controller('ChatsCtrl', function($scope, Chats, $ionicHistory, $state, threa
 	};
 
   var user = {};
-
+	$scope.isLoading = true;
 	$scope.$on('$ionicView.enter', function(e) {
         if(Parse.User.current()){
-            user.id = Parse.User.current().get('profileId');
+            user.id = Parse.User.current().get('artistId');
 						getThreads();
         }else{
             $ionicHistory.nextViewOptions({
@@ -19,18 +19,12 @@ app.controller('ChatsCtrl', function($scope, Chats, $ionicHistory, $state, threa
 	});
 
 	function getThreads(){
-		$ionicLoading.show({
-			template: 'Loading :)'
-		}).then(function(){
-			console.log("The loading indicator is now displayed");
-		});
-
-		threadService.getThreadById(Parse.User.current().get('profileId'))
+		threadService.getThreadById(Parse.User.current().get('artistId'))
 		.then(function(results) {
 			// Handle the result
 			console.log(results);
 			$scope.threads = results;
-			$ionicLoading.hide();
+			$scope.isLoading = false;
 		}, function(err) {
 			$ionicLoading.hide();
 			// Error occurred

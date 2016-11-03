@@ -1,0 +1,17 @@
+.ion-google-place-container{
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 20;
+    display: none;
+    background-color: transparent;
+}
+
+
+input.ion-google-place[readonly]{
+    cursor: text;
+    background-color: white !important;
+    border-radius: 30px;
+}

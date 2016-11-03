@@ -1,10 +1,37 @@
 /* Empty. Add your own CSS if you like */
 #map {
 	width: 100%;
-	height: 100%;
+	height: 90%;
 }
 
 /* Overrides */
+
+input.ion-google-place[readonly]{
+	background-color: transparent;
+	cursor: text;
+	width: 100%;
+	padding-left: 3%;
+}
+
+.button.button-royal {
+	background : rgb(183, 208, 91);
+}
+
+.button.button-royal.activated {
+	background : rgb(210, 224, 161);
+}
+
+.popup-head {
+	background: #f1807a;
+}
+
+.popup-title {
+	color : white;
+}
+
+.bar.bar-calm {
+	background : #443b3e !important;
+}
 
 .scroll {
 	height: 100%;
@@ -28,6 +55,12 @@
 
 /* Chat */
 
+
+.blushnewmessage{
+	font-weight: bold !important;
+	color: black !important;
+}
+
 body {
 	cursor: url('http://ionicframework.com/img/finger.png'), auto;
 }
@@ -36,6 +69,11 @@ body {
 /* optionally set a max-height */
 /* maxlength on the textarea will prevent /*
 /* it from getting too large also */
+
+.chat-history-header-adjust {
+	margin-top: 50px;
+}
+
 .bar-footer {
 	overflow: visible !important;
 }
@@ -194,11 +232,11 @@ a.autolinker {
 
 .platform-ios.platform-cordova:not(.fullscreen) .bar-header
 {
-	height: 55px !important;
+	height: 44px !important;
 }
 .platform-ios.platform-cordova:not(.fullscreen) .bar-header:not(.bar-subheader)
 {
-	height: 55px !important;
+	height: 44px !important;
 }
 
 .platform-ios.platform-cordova:not(.fullscreen) .bar-header:not(.bar-subheader).item-input-inset .item-input-wrapper
@@ -222,5 +260,5 @@ a.autolinker {
 }
 
 .platform-ios.platform-cordova:not(.fullscreen) .has-subheader {
-	top: 110px !important;
+	top: 88px !important;
 }

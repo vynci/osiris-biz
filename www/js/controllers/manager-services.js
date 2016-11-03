@@ -1,13 +1,14 @@
-app.controller('ManagerServicesCtrl', function($scope, serviceService, $ionicLoading, $ionicHistory, $ionicModal, artistService, $ionicPopup, $state) {
+app.controller('ManagerServicesCtrl', function($scope, serviceService, $ionicLoading, $ionicHistory, $ionicModal, artistService, $ionicPopup, $state, $cordovaCamera) {
 	console.log('manager services controller');
 
 	var userId = '';
 	var priceRange = [];
 	$scope.service = {};
-    $scope.isModalEdit = false;
+  $scope.isModalEdit = false;
+	$scope.serviceType = 'Create Service';
 
 	if(Parse.User.current()){
-		userId = Parse.User.current().get('profileId');
+		userId = Parse.User.current().get('artistId');
 
 		loading();
 
@@ -19,23 +20,190 @@ app.controller('ManagerServicesCtrl', function($scope, serviceService, $ionicLoa
 		$state.transitionTo('tab.account-login', null, {reload: true, notify:true});
 	}
 
+	document.addEventListener("deviceready", function () {
+		var options = {
+			quality: 100,
+			destinationType: Camera.DestinationType.DATA_URL,
+			sourceType: Camera.PictureSourceType.CAMERA,
+			allowEdit: true,
+			encodingType: Camera.EncodingType.JPEG,
+			targetWidth: 400,
+			targetHeight: 400,
+			popoverOptions: CameraPopoverOptions,
+			saveToPhotoAlbum: false,
+			correctOrientation:true,
+			cameraDirection : 0
+		};
+
+		$scope.takePicture = function(){
+			options.sourceType = Camera.PictureSourceType.CAMERA;
+			$cordovaCamera.getPicture(options).then(function(imageData) {
+				// var image = document.getElementById('myImage');
+				// image.src = "data:image/jpeg;base64," + imageData;
+				console.log(imageData);
+
+				var file = imageData;
+
+				var uploadFile = new Parse.File('image.jpg', {base64 : file});
+				console.log(uploadFile);
+
+				uploadFile.save().then(function(result) {
+					// The file has been saved to Parse.
+					console.log(result);
+					$scope.uploadServicePhoto(result._url);
+				}, function(error) {
+					// The file either could not be read, or could not be saved to Parse.
+				});
+
+
+			}, function(err) {
+				// error
+			});
+		}
+
+		$scope.getFromGallery = function(){
+			options.sourceType = Camera.PictureSourceType.PHOTOLIBRARY;
+			$cordovaCamera.getPicture(options).then(function(imageData) {
+				// var image = document.getElementById('myImage');
+				// image.src = "data:image/jpeg;base64," + imageData;
+				console.log(imageData);
+
+				var file = imageData;
+
+				var uploadFile = new Parse.File('image.jpg', {base64 : file});
+
+				uploadFile.save().then(function(result) {
+					// The file has been saved to Parse.
+					console.log(result);
+					$scope.uploadServicePhoto(result._url);
+				}, function(error) {
+					// The file either could not be read, or could not be saved to Parse.
+				});
+
+			}, function(err) {
+				// error
+			});
+		}
+	}, false);
+
+	$scope.viewServicePhoto = function(photo, arrayNumber){
+		if(arrayNumber !== null){
+			var myPopup = $ionicPopup.show({
+				template: '<div style=""><img style="width:100%;" src="' + photo +'"></div>',
+				title: '<b>View Portfolio</b>',
+				subTitle: '',
+				scope: $scope,
+				buttons: [
+					{ text: 'Close' },
+					{
+						text: 'Delete' ,
+						type: 'button-assertive',
+						onTap: function(e) {
+							deleteServicePhoto(arrayNumber, $scope.service.id);
+						}
+					}
+					]
+			 });
+		}else{
+			var myPopup = $ionicPopup.show({
+				template: '<div style=""><img style="width:100%;" src="' + photo +'"></div>',
+				title: '<b>View Portfolio</b>',
+				subTitle: '',
+				scope: $scope,
+				buttons: [
+					{ text: 'Close' }
+				]
+			});
+		}
+
+
+		myPopup.then(function(res) {
+			console.log('Tapped!', res);
+		});
+	};
+
+	$scope.showUploadOption = function() {
+		$scope.data = {};
+
+		// An elaborate, custom popup
+		var myPopup = $ionicPopup.show({
+			template: '',
+			title: '<b>Choose</b>',
+			subTitle: '',
+			scope: $scope,
+			buttons: [
+				{ text: 'Close' },
+				{
+					text: '<b>Camera</b>',
+					type: 'button-energized',
+					onTap: function(e) {
+						$scope.takePicture();
+					}
+				},
+				{
+					text: '<b>Gallery</b>',
+					type: 'button-balanced',
+					onTap: function(e) {
+						$scope.getFromGallery();
+					}
+				}
+			]
+		});
+
+		myPopup.then(function(res) {
+			console.log('Tapped!', res);
+		});
+
+	};
+
+	$scope.uploadServicePhoto = function(url){
+		$scope.currentPortfolioDescription = {
+			data : ''
+		}
+		var myPopup = $ionicPopup.show({
+			template: '<div style=""><img style="width:100%;" src="' + url +'"></div>',
+			title: '<b>New Service Photo</b>',
+			subTitle: '',
+			scope: $scope,
+			buttons: [
+				{ text: 'Close' },
+				{
+					text: '<b>Save</b>',
+					type: 'button-balanced',
+					onTap: function(e) {
+						savePortfolio(url, $scope.service.id);
+					}
+				}
+			]
+			});
+
+		myPopup.then(function(res) {
+			console.log('Tapped!', res);
+		});
+	}
+
 	$scope.addService = function(){
 		console.log('add service');
-        $scope.isModalEdit = false;
-        $scope.service = {};
+		$scope.serviceType = 'Create Service';
+    $scope.isModalEdit = false;
+    $scope.service = {};
 		$scope.modal.show();
 	}
 
 	$scope.editService = function(service){
 		console.log('edit service');
-        $scope.isModalEdit = true;
+		$scope.serviceType = 'Edit Service';
+		$scope.service = {};
+    $scope.isModalEdit = true;
 		$scope.modal.show();
 		$scope.currentService = service;
 		$scope.service = {
+			id : service.id,
 			name : service.get('name'),
 			description : service.get('description'),
 			duration : service.get('duration'),
 			price : service.get('price'),
+			servicePhotos : service.get('servicePhotos'),
 		};
 	}
 
@@ -215,6 +383,102 @@ app.controller('ManagerServicesCtrl', function($scope, serviceService, $ionicLoa
 			template: 'Loading...'
 		}).then(function(){
 
+		});
+	}
+
+	function savePortfolio(imagePath, id){
+
+		$ionicLoading.show({
+			template: 'Loading...'
+		}).then(function(){
+
+		});
+
+		var Service = Parse.Object.extend("Service");
+		var service = new Service();
+		$scope.service.servicePhotos.push({
+			path : imagePath
+		});
+		service.id = id;
+		service.set("servicePhotos", $scope.service.servicePhotos);
+
+		service.save(null, {
+			success: function(result) {
+				// Execute any logic that should take place after the object is saved.
+				console.log(result);
+
+				var alertPopup = $ionicPopup.alert({
+					title: 'Service Photo',
+					template: 'Successfully Saved!'
+				});
+
+				alertPopup.then(function(res) {
+
+				});
+
+				$ionicLoading.hide();
+			},
+			error: function(gameScore, error) {
+				// Execute any logic that should take place if the save fails.
+				// error is a Parse.Error with an error code and message.
+				var alertPopup = $ionicPopup.alert({
+					title: 'Service Photo',
+					template: 'Service Photo: Add Failed'
+				});
+
+				alertPopup.then(function(res) {
+
+				});
+			}
+		});
+	}
+
+	function deleteServicePhoto(arrayNumber, id){
+		$ionicLoading.show({
+			template: 'Loading...'
+		}).then(function(){
+
+		});
+
+		var Service = Parse.Object.extend("Service");
+		var service = new Service();
+
+		if (arrayNumber > -1) {
+			$scope.service.servicePhotos.splice(arrayNumber, 1);
+		}
+		console.log(arrayNumber);
+		console.log($scope.service.servicePhotos);
+		service.id = id;
+		service.set("servicePhotos", $scope.service.servicePhotos);
+
+		service.save(null, {
+			success: function(result) {
+				// Execute any logic that should take place after the object is saved.
+				console.log(result);
+
+				var alertPopup = $ionicPopup.alert({
+					title: 'Service Photo',
+					template: 'Successfully Deleted!'
+				});
+
+				alertPopup.then(function(res) {
+
+				});
+
+				$ionicLoading.hide();
+			},
+			error: function(gameScore, error) {
+				// Execute any logic that should take place if the save fails.
+				// error is a Parse.Error with an error code and message.
+				var alertPopup = $ionicPopup.alert({
+					title: 'Service Photo',
+					template: 'Service Photo: Delete Failed'
+				});
+
+				alertPopup.then(function(res) {
+
+				});
+			}
 		});
 	}
 

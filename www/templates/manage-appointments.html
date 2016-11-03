@@ -3,48 +3,75 @@
 
     <!-- <label class="item" style="border-top-width: 0px; border-top-width: 0px; border-bottom-width: 1px; border-bottom-style: dashed; border-bottom-color: #444;"> -->
     <div style="font-size: 17px; text-align: center; background: white; border-bottom: 0px;" class="item item-divider">
-      <a class="button button-block button-royal" href="#/tab/manage-schedule-calendar">View Calendar Schedules</a>
+      <a class="button button-block button-royal" href="#/tab/manage-schedule-calendar"><i class="icon ion-calendar"></i> View Calendar Schedules</a>
     </div>
     <!-- </label> -->
 
     <div class="card">
-      <div class="list">
+      <div style="background: #ffc900; color: white;" class="item item-divider text-center">
+        Pending <b>({{appointments.pending.length}})</b>
+      </div>
+      <div ng-if="isLoading" style="text-align: center; padding-top: 25px;">
+        <ion-spinner icon="spiral"></ion-spinner><br>
+        <span>Loading Pending Appointments...</span>
+      </div>
+      <div ng-if="appointments.pending.length === 0 && !isLoading"> <p style="padding-left: 15px; padding-right: 15px; text-align: center; padding-top:10px;">You currently have no pending appointments.</p></div>
+      <div class="list" style="margin-bottom: 0px;">
 
-        <a class="item item-button-right" ng-repeat="pendingAppointment in appointments.pending | orderBy: '-attributes.updatedAt'">
-          {{pendingAppointment.attributes.customerInfo.firstName}} {{pendingAppointment.attributes.customerInfo.lastName}} <br>
+        <a class="item item-button-right" ng-repeat="pendingAppointment in appointments.pending | orderBy: '-attributes.updatedAt' | limitTo:listView.pending">
+          {{pendingAppointment.attributes.customerInfo.firstName || 'Anonymous'}} {{pendingAppointment.attributes.customerInfo.lastName || 'User'}} <br>
           <!-- <p>{{pendingAppointment.attributes.createdAt.toString() | limitTo:21}}</p> -->
           <span am-time-ago="pendingAppointment.attributes.createdAt" style="font-size: 11px;"></span>
           <button class="button button-positive" ng-click="showBookingAlert(pendingAppointment, 'Accept')">
             View
           </button>
         </a>
-
+      </div>
+      <div ng-if="listView.pending === 3 && appointments.pending.length > 3" style="font-size: 17px; text-align: center; background: white; border-bottom: 0px;" class="item item-divider">
+        <a class="button button-block button-light" ng-click="viewAll('pending', false)">View All <b>({{appointments.pending.length}})</b></a>
       </div>
 
-      <div style="background: #ffc900; color: white;" class="item item-divider text-center">
-        Pending
+      <div ng-if="listView.pending !== 3" style="font-size: 17px; text-align: center; background: white; border-bottom: 0px;" class="item item-divider">
+        <a class="button button-block button-light" ng-click="viewAll('pending', 3)">Hide</a>
       </div>
+
     </div>
 
     <div class="card">
-      <div class="item item-divider">
+      <div style="background: #387ef5; color: white;" class="item item-divider text-center">
+        Accepted <b>({{appointments.accepted.length}})</b>
       </div>
-      <a class="item item-button-right" ng-repeat="acceptedAppointment in appointments.accepted | orderBy: '-attributes.updatedAt'">
+      <div ng-if="isLoading" style="text-align: center; padding-top: 25px;">
+        <ion-spinner icon="spiral"></ion-spinner><br>
+        <span>Loading Accepted Appointments...</span>
+      </div>
+      <div ng-if="appointments.accepted.length === 0 && !isLoading"> <p style="padding-left: 15px; padding-right: 15px; text-align: center; padding-top:10px;">You currently have no accepted appointments.</p></div>
+
+      <a class="item item-button-right" ng-repeat="acceptedAppointment in appointments.accepted | orderBy: '-attributes.updatedAt' | limitTo:listView.accepted">
         {{acceptedAppointment.attributes.customerInfo.firstName}} {{acceptedAppointment.attributes.customerInfo.lastName}}<br>
         <span am-time-ago="acceptedAppointment.attributes.updatedAt" style="font-size: 11px;"></span>
         <button class="button button-positive" ng-click="showBookingAlert(acceptedAppointment, 'Complete', 'button-balanced')">
           View
         </button>
       </a>
-      <div style="background: #387ef5; color: white;" class="item item-divider text-center">
-        Accepted
+      <div ng-if="listView.accepted === 3 && appointments.accepted.length > 3" style="font-size: 17px; text-align: center; background: white; border-bottom: 0px;" class="item item-divider">
+        <a class="button button-block button-light" ng-click="viewAll('accepted', false)">View All <b>({{appointments.accepted.length}})</b></a>
+      </div>
+      <div ng-if="listView.accepted !== 3" style="font-size: 17px; text-align: center; background: white; border-bottom: 0px;" class="item item-divider">
+        <a class="button button-block button-light" ng-click="viewAll('accepted', 3)">Hide</a>
       </div>
     </div>
 
     <div class="card">
-      <div class="item item-divider">
+      <div style="background: #33cd5f; color: white;" class="item item-divider text-center">
+        Completed <b>({{appointments.completed.length}})</b>
       </div>
-      <a class="item item-button-right" ng-repeat="completedAppointment in appointments.completed | orderBy: '-attributes.updatedAt'">
+      <div ng-if="isLoading" style="text-align: center; padding-top: 25px;">
+        <ion-spinner icon="spiral"></ion-spinner><br>
+        <span>Loading Completed Appointments...</span>
+      </div>
+      <div ng-if="appointments.completed.length === 0 && !isLoading"> <p style="padding-left: 15px; padding-right: 15px; text-align: center; padding-top:10px;">You currently have no completed appointments.</p></div>
+      <a class="item item-button-right" ng-repeat="completedAppointment in appointments.completed | orderBy: '-attributes.updatedAt' | limitTo:listView.completed">
         {{completedAppointment.attributes.customerInfo.firstName}} {{completedAppointment.attributes.customerInfo.lastName}}<br>
         <span am-time-ago="completedAppointment.attributes.updatedAt" style="font-size: 11px;"></span>
         <button class="button button-balanced" ng-click="restoreAppointment(completedAppointment, true)">
@@ -54,21 +81,35 @@
           {{completedAppointment.attributes.customerInfo.dateCompleted}}
         </span> -->
       </a>
-      <div style="background: #33cd5f; color: white;" class="item item-divider text-center">
-        Completed
+      <div ng-if="listView.completed === 3 && appointments.completed.length > 3" style="font-size: 17px; text-align: center; background: white; border-bottom: 0px;" class="item item-divider">
+        <a class="button button-block button-light" ng-click="viewAll('completed', false)">View All <b>({{appointments.completed.length}})</b></a>
+      </div>
+      <div ng-if="listView.completed !== 3 && !isLoading" style="font-size: 17px; text-align: center; background: white; border-bottom: 0px;" class="item item-divider">
+        <a class="button button-block button-light" ng-click="viewAll('completed', 3)">Hide</a>
       </div>
     </div>
 
     <div class="card">
-      <a class="item item-button-right" ng-repeat="canceledAppointment in appointments.canceled | orderBy: '-attributes.updatedAt'">
+      <div style="background: #ef473a; color: white;" class="item item-divider text-center">
+        Canceled <b>({{appointments.canceled.length}})</b>
+      </div>
+      <div ng-if="isLoading" style="text-align: center; padding-top: 25px;">
+        <ion-spinner icon="spiral"></ion-spinner><br>
+        <span>Loading Canceled Appointments...</span>
+      </div>
+      <div ng-if="appointments.canceled.length === 0 && !isLoading"> <p style="padding-left: 15px; padding-right: 15px; text-align: center; padding-top:10px;">You currently have no canceled appointments.</p></div>
+      <a class="item item-button-right" ng-repeat="canceledAppointment in appointments.canceled | orderBy: '-attributes.updatedAt' | limitTo:listView.canceled">
         {{canceledAppointment.attributes.customerInfo.firstName}} {{canceledAppointment.attributes.customerInfo.lastName}}<br>
         <span am-time-ago="canceledAppointment.attributes.updatedAt" style="font-size: 11px;"></span>
         <button class="button button-assertive" ng-click="restoreAppointment(canceledAppointment)">
           Restore
         </button>
       </a>
-      <div style="background: #ef473a; color: white;" class="item item-divider text-center">
-        Canceled
+      <div ng-if="listView.canceled === 3 && appointments.canceled.length > 3" style="font-size: 17px; text-align: center; background: white; border-bottom: 0px;" class="item item-divider">
+        <a class="button button-block button-light" ng-click="viewAll('canceled', false)">View All <b>({{appointments.canceled.length}})</b></a>
+      </div>
+      <div ng-if="listView.canceled !== 3" style="font-size: 17px; text-align: center; background: white; border-bottom: 0px;" class="item item-divider">
+        <a class="button button-block button-light" ng-click="viewAll('canceled', 3)">Hide</a>
       </div>
     </div>
 

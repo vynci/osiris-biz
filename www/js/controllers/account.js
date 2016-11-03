@@ -6,17 +6,18 @@ app.controller('AccountCtrl', function($scope, $ionicLoading, $rootScope, artist
 	}
 
 	$scope.placeholder = 'img/placeholder.png'
-
+	$scope.isLoading = true;
 	$scope.$on('$ionicView.enter', function(e) {
         if(Parse.User.current()){
-            userId = Parse.User.current().get('profileId');
-            $ionicLoading.show({
-                template: 'Loading...'
-            }).then(function(){
+            userId = Parse.User.current().get('artistId');
+            // $ionicLoading.show({
+            //     template: 'Loading...'
+            // }).then(function(){
+						//
+            // });
 
-            });
 
-            getArtistById(Parse.User.current().get('profileId'));
+            getArtistById(Parse.User.current().get('artistId'));
         }else{
             $ionicHistory.nextViewOptions({
                 disableBack: true
@@ -136,7 +137,7 @@ app.controller('AccountCtrl', function($scope, $ionicLoading, $rootScope, artist
 				});
 
 				alertPopup.then(function(res) {
-					getArtistById(Parse.User.current().get('profileId'));
+					getArtistById(Parse.User.current().get('artistId'));
 				});
 
 			},
@@ -167,10 +168,10 @@ app.controller('AccountCtrl', function($scope, $ionicLoading, $rootScope, artist
 				currentCoordinates : results[0].get('currentCoordinates'),
 				icon : results[0].get('icon') || $scope.userPlaceholder
 			}
-			$ionicLoading.hide();
+			$scope.isLoading = false;
 			return results;
 		}, function(err) {
-			$ionicLoading.hide();
+			$scope.isLoading = false;
 			// Error occurred
 			console.log(err);
 		}, function(percentComplete) {

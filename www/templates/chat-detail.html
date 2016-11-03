@@ -17,7 +17,7 @@ Submit
 
 <ion-view id="userMessagesView"
 cache-view="false"
-view-title="{{toUser.username}} ({{isPubnubOnline}})">
+view-title="{{toUser.username}}">
 
 <div class="loader-center" ng-if="!doneLoading">
   <div class="loader">
@@ -25,20 +25,28 @@ view-title="{{toUser.username}} ({{isPubnubOnline}})">
   </div>
 </div>
 
+<div style="font-size: 17px; text-align: center; background: white; border-bottom: 0px; padding-top: 50px; padding-bottom: 0px;" class="item item-divider">
+  <a class="button button-block button-balanced button-small" ng-click="backToInbox()" style="margin-top: 0px;"><i class="icon ion-chevron-left"></i> Back To Inbox</b></a>
+</div>
+
 <ion-content has-bouncing="true" class="has-header has-footer"
-delegate-handle="userMessageScroll">
+delegate-handle="userMessageScroll" ng-class="isBackViewHistory">
 
 <!-- <div ng-if="messages.length < 1" class="text-center" style="padding-top: 50%;">
   <p style="color: gray;">This is your first chat with ...</p>
 </div> -->
+<div ng-if="isLoading" style="text-align: center; padding-top: 50%;">
+  <ion-spinner icon="spiral"></ion-spinner><br>
+  <span>Loading Messages...</span>
+</div>
 
-<div ng-repeat="message in messages" class="message-wrapper"
+<div ng-repeat="message in messages | orderBy: 'attributes.createdAt'" class="message-wrapper"
 on-hold="onMessageHold($event, $index, message)">
 
 <div ng-if="user._id !== message.attributes.userId">
 
   <img ng-click="viewProfile(message)" class="profile-pic left"
-  ng-src="{{toUser.pic}}" onerror="onProfilePicError(this)" />
+  ng-src="{{toUser.pic || spiral}}" onerror="onProfilePicError(this)" />
 
   <div class="chat-bubble left">
 
@@ -56,7 +64,7 @@ on-hold="onMessageHold($event, $index, message)">
 <div ng-if="user._id === message.attributes.userId">
 
   <img ng-click="viewProfile(message)" class="profile-pic right"
-  ng-src="{{user.pic}}" onerror="onProfilePicError(this)" />
+  ng-src="{{user.pic || spiral}}" onerror="onProfilePicError(this)" />
 
   <div class="chat-bubble right">
 

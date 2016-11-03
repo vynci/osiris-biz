@@ -14,11 +14,7 @@ app.controller('LoginCtrl', function($scope, $ionicLoading, $rootScope, $ionicHi
 	});
 
 	$scope.doLogin = function() {
-		$ionicLoading.show({
-			template: 'Logging in...'
-		}).then(function(){
-			console.log("The loading indicator is now displayed");
-		});
+		$scope.isLoading = true;
 		userLogin($scope.loginData.username, $scope.loginData.password);
 	};
 
@@ -28,7 +24,7 @@ app.controller('LoginCtrl', function($scope, $ionicLoading, $rootScope, $ionicHi
 			success: function(user) {
 				// Do stuff after successful login.
 				$rootScope.currentUser = Parse.User.current();
-				$ionicLoading.hide();
+				$scope.isLoading = false;
 				$ionicHistory.nextViewOptions({
 					disableBack: true
 				});
@@ -36,7 +32,7 @@ app.controller('LoginCtrl', function($scope, $ionicLoading, $rootScope, $ionicHi
 			},
 			error: function(user, error) {
 				// The login failed. Check error to see why.
-				$ionicLoading.hide();
+				$scope.isLoading = false;
 				var alertPopup = $ionicPopup.alert({
 					title: 'Login Error',
 					template: 'Sorry ' + error.message

@@ -1,9 +1,9 @@
 
 app.controller('ChatDetailCtrl', ['$scope', '$rootScope', '$state',
 '$stateParams', 'MockService', '$ionicActionSheet',
-'$ionicPopup', '$ionicScrollDelegate', '$timeout', '$interval', '$ionicLoading', 'messageService', 'artistService', 'customerService', '$ionicScrollDelegate', 'Pubnub',
+'$ionicPopup', '$ionicScrollDelegate', '$timeout', '$interval', '$ionicLoading', 'messageService', 'artistService', 'customerService', '$ionicScrollDelegate', 'Pubnub', '$ionicHistory',
 function($scope, $rootScope, $state, $stateParams, MockService,
-	$ionicActionSheet, $ionicPopup, $ionicScrollDelegate, $timeout, $interval, $ionicLoading, messageService, artistService, customerService, $ionicScrollDelegate, Pubnub) {
+	$ionicActionSheet, $ionicPopup, $ionicScrollDelegate, $timeout, $interval, $ionicLoading, messageService, artistService, customerService, $ionicScrollDelegate, Pubnub, $ionicHistory) {
 
 		// mock acquiring data via $stateParams
 		console.log($stateParams);
@@ -19,10 +19,17 @@ function($scope, $rootScope, $state, $stateParams, MockService,
 
 		// this could be on $rootScope rather than in $stateParams
 		$scope.user = {
-			_id: Parse.User.current().get('profileId'),
+			_id: Parse.User.current().get('artistId'),
 			pic: $scope.spiral,
 			username: 'Anonymous'
 		};
+
+		$scope.backToInbox = function(){
+			$ionicHistory.nextViewOptions({
+				disableBack: true
+			});
+			$state.transitionTo('tab.chats');
+		}
 
 		$rootScope.getStreamMessage = function(messageObj){
 			if(messageObj.content){
@@ -45,21 +52,29 @@ function($scope, $rootScope, $state, $stateParams, MockService,
 		}
 
 		function getMessagesApi(){
-			$ionicLoading.show({
-				template: 'Loading :)'
-			}).then(function(){
-				console.log("The loading indicator is now displayed");
-			});
-
 			messageService.getMessageById($stateParams.chatId)
 			.then(function(results) {
 				// Handle the result
 				console.log(results);
 				$scope.messages = results;
-				$ionicLoading.hide();
+				$scope.isLoading = false;
 				$ionicScrollDelegate.scrollBottom();
+
+				var Thread = Parse.Object.extend("Thread");
+				var thread = new Thread();
+
+				thread.id = $stateParams.chatId;
+				thread.set("isNewMessageArtist", false);
+
+				thread.save(null, {
+					success: function(result) {
+					},
+					error: function(gameScore, error) {
+						message.set("isFail", true);
+					}
+				});
+
 			}, function(err) {
-				$ionicLoading.hide();
 				// Error occurred
 				console.log(err);
 			}, function(percentComplete) {
@@ -88,11 +103,6 @@ function($scope, $rootScope, $state, $stateParams, MockService,
 		}
 
 		function getArtistById(id){
-			$ionicLoading.show({
-				template: 'Loading :)'
-			}).then(function(){
-				console.log("The loading indicator is now displayed");
-			});
 
 			artistService.getArtistById(id)
 			.then(function(results) {
@@ -104,7 +114,6 @@ function($scope, $rootScope, $state, $stateParams, MockService,
 
 			}, function(err) {
 				// Error occurred
-				$ionicLoading.hide();
 			}, function(percentComplete) {
 				console.log(percentComplete);
 			});
@@ -123,7 +132,18 @@ function($scope, $rootScope, $state, $stateParams, MockService,
 
 		$scope.$on('$ionicView.enter', function() {
 			console.log('UserMessages $ionicView.enter');
-			getArtistById(Parse.User.current().get('profileId'));
+			$scope.isLoading = true;
+			$scope.backViewHistory = $ionicHistory.backView();
+			$scope.isBackViewHistory = 'chat-history-header-adjust';
+			// if($scope.backViewHistory){
+			// 	if($scope.backViewHistory.stateId === 'tab.manage-appointments'){
+			//
+			// 	}else{
+			// 		$scope.isBackViewHistory = '';
+			// 	}
+			// }
+
+			getArtistById(Parse.User.current().get('artistId'));
 
 			$timeout(function() {
 				footerBar = document.body.querySelector('#userMessagesView .bar-footer');
@@ -196,7 +216,7 @@ function($scope, $rootScope, $state, $stateParams, MockService,
 
 			message.set("threadId", $stateParams.chatId);
 			message.set("message", messageTxt);
-			message.set("userId", Parse.User.current().get('profileId'));
+			message.set("userId", Parse.User.current().get('artistId'));
 			$scope.messages.push(message);
 			message.save(null, {
 				success: function(result) {
@@ -207,6 +227,7 @@ function($scope, $rootScope, $state, $stateParams, MockService,
 
 					thread.id = $stateParams.chatId;
 					thread.set("lastMessage", messageTxt);
+					thread.set("isNewMessageCustomer", true);
 
 					thread.save(null, {
 						success: function(result) {

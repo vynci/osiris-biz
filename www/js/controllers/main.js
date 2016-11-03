@@ -1,13 +1,16 @@
-app.controller('MainCtrl', function($scope, $ionicPopup, Pubnub, $pubnubChannel, $state, $rootScope, $ionicLoading, $ionicHistory, $stateParams, $state, customerService) {
+app.controller('MainCtrl', function($scope, $ionicPopup, Pubnub, $pubnubChannel, $state, $rootScope, $ionicLoading, $ionicHistory, $stateParams, $state, customerService, $cordovaLocalNotification, artistService, threadService) {
 	console.log('main!');
 	console.log($state);
 	var user = {
 		id : "jsYBzvkOHj"
 	}
 
+	var bookingPopup;
+
 	$scope.$on('$ionicView.enter', function(e) {
+		console.log($ionicHistory);
 		if(Parse.User.current()){
-			user.id = Parse.User.current().get('profileId');
+			user.id = Parse.User.current().get('artistId');
 		}else{
 			// $ionicHistory.nextViewOptions({
 			// 	disableBack: true
@@ -15,6 +18,35 @@ app.controller('MainCtrl', function($scope, $ionicPopup, Pubnub, $pubnubChannel,
 			// $state.transitionTo('tab.account-login', null, {reload: true, notify:true});
 		}
 	});
+
+	$scope.clearHistory = function() {
+
+		$ionicHistory.clearHistory();
+	}
+
+	$scope.messageCustomer = function(){
+		var customer = $scope.currentCustomerSelected;
+
+		threadService.isThreadExist(customer.customerInfo.id, Parse.User.current().get('profileId'))
+		.then(function(results) {
+			// Handle the result
+			console.log(results);
+			bookingPopup.close();
+			if(results.length){
+				$state.go('tab.chat-detail', {customerId: customer.customerInfo.id, chatId: results[0].id});
+			}else{
+				console.log('create new thread');
+				getArtistProfile(customer);
+			}
+
+			return results;
+		}, function(err) {
+			// Error occurred
+			console.log(err);
+		}, function(percentComplete) {
+			console.log(percentComplete);
+		});
+	}
 
 	$scope.showMessageAlert = function(message) {
 		$scope.data = {};
@@ -62,21 +94,22 @@ app.controller('MainCtrl', function($scope, $ionicPopup, Pubnub, $pubnubChannel,
 		console.log(booking);
 		// An elaborate, custom popup
 		var customer = booking.content;
+		$scope.currentCustomerSelected = customer;
 		var avatar = customer.customerInfo.avatar || 'img/placeholder.png';
-		var myPopup = $ionicPopup.show({
-			template: '<div style="padding: 0px 100px;"><img style="width:100%; border-radius: 50%";" src="' + avatar + '"></div><div style="text-align:center;"><button class="button button-small button-blocked button-energized"><i class="icon ion-chatboxes"> Chat</i></button> <button class="button button-small button-blocked button-calm" ng-click="contact()"><i class="icon ion-ios-email"> SMS</i></button>   <button class="button button-small button-balanced"><i class="icon ion-ios-telephone"> Call</i></button></div> <br>Name: ' + customer.customerInfo.firstName + ' ' + customer.customerInfo.lastName +'<br>Location: Mandaue, Cebu City<br>Contact: ' + customer.customerInfo.contactNumber +'<br> Schedule: ' + customer.schedule.iso.toString() +' <br> Total Bill: P' + customer.totalBill,
+		bookingPopup = $ionicPopup.show({
+			template: '<div style="padding: 0px 100px;"><img style="width:100%; border-radius: 50%";" src="' + avatar + '"></div><div style="text-align:center;"><button class="button button-small button-blocked button-energized" ng-click="messageCustomer()"><i class="icon ion-chatboxes"> Chat</i></button> <a class="button button-small button-blocked button-calm" href="sms:'+ customer.customerInfo.contactNumber +'""><i class="icon ion-ios-email"> SMS</i></a>   <a class="button button-small button-balanced" href="tel:'+ customer.customerInfo.contactNumber +'"><i class="icon ion-ios-telephone"> Call</i></a></div> <br>Name: ' + customer.customerInfo.firstName + ' ' + customer.customerInfo.lastName +'<br>Location: Mandaue, Cebu City<br>Contact: ' + customer.customerInfo.contactNumber +'<br> Schedule: ' + customer.schedule.iso.toString() +' Selected Services: <span ng-repeat="service in currentCustomerSelected.selectedServices">{{service.name}}{{$last ? "" : ", "}}</span><br> Total Bill: P' + customer.totalBill,
 			title: '<b>You have a new booking!</b>',
 			subTitle: '',
 			scope: $scope,
 			buttons: [
 				{ text: 'Close' },
-				{
-					text: '<b>View</b>',
-					type: 'button-positive',
-					onTap: function(e) {
-						$state.go('tab.manage-appointments');
-					}
-				},
+				// {
+				// 	text: '<b>Details</b>',
+				// 	type: 'button-positive',
+				// 	onTap: function(e) {
+				// 		$state.go('tab.manage-appointments');
+				// 	}
+				// },
 				{
 					text: '<b>Accept</b>',
 					type: 'button-balanced',
@@ -87,11 +120,95 @@ app.controller('MainCtrl', function($scope, $ionicPopup, Pubnub, $pubnubChannel,
 			]
 		});
 
-		myPopup.then(function(res) {
+		bookingPopup.then(function(res) {
 			console.log('Tapped!', res);
 		});
 
 	};
+
+	function getArtistProfile(customer){
+		$ionicLoading.show({
+			template: 'Loading...'
+		}).then(function(){
+		});
+
+		if(Parse.User.current()){
+			artistService.getArtistById(Parse.User.current().get('profileId'))
+			.then(function(results) {
+				// Handle the result
+				createNewThread(results[0], customer);
+
+
+				return results;
+			}, function(err) {
+				// Error occurred
+				$ionicLoading.hide();
+				console.log(err);
+			}, function(percentComplete) {
+				console.log(percentComplete);
+			});
+		}
+	}
+
+	function createNewThread(artist, customer){
+		var Thread = Parse.Object.extend("Thread");
+		var thread = new Thread();
+
+		thread.set("lastMessage", '');
+		thread.set("messages", []);
+		thread.set("artistInfo", {
+			"id": artist.id,
+			"firstName": artist.get('firstName'),
+			"lastName": artist.get('lastName'),
+			"avatar": artist.get('avatar')
+		});
+
+		thread.set("customerInfo", {
+			"id": customer.customerInfo.id,
+			"firstName": customer.customerInfo.firstName,
+			"lastName": customer.customerInfo.lastName,
+			"avatar": customer.customerInfo.avatar || 'img/placeholder.png'
+		});
+
+		thread.save(null, {
+			success: function(result) {
+				// Execute any logic that should take place after the object is saved.
+				console.log('last message success');
+				$state.go('tab.chat-detail', {customerId: customer.customerInfo.id, chatId: result.id});
+				$ionicLoading.hide();
+			},
+			error: function(gameScore, error) {
+				$ionicLoading.hide();
+			}
+		});
+	}
+
+	function openLocalNotification(message, isBooking){
+		console.log('local notif!');
+		console.log(message);
+		var id = '';
+		var title = '';
+		var text = '';
+
+		if(isBooking){
+			var schedule = message.content.schedule.iso.toString();
+			id = message.content.objectId;
+			title = 'New Booking!';
+			text = message.sender.name + ' - ₱' + message.content.totalBill + ' - ' + schedule.slice(0,10);
+		}else{
+			id = message.content.threadId;
+			title = message.sender.name;
+			text = message.content.message;
+		}
+
+		$cordovaLocalNotification.schedule({
+			id: id,
+			title: title,
+			text: text
+		}).then(function (result) {
+			// ...
+		});
+	}
 
 	function setAppointment(booking, status, type){
 		var Appointment = Parse.Object.extend("Booking");
@@ -110,19 +227,11 @@ app.controller('MainCtrl', function($scope, $ionicPopup, Pubnub, $pubnubChannel,
 					subTitle: '',
 					scope: $scope,
 					buttons: [
-						{ text: 'Close' },
 						{
-							text: '<b>Calendar</b>',
+							text: '<b>Ok</b>',
 							type: 'button-positive',
 							onTap: function(e) {
-								$state.go('tab.manage-schedule-calendar');
-							}
-						},
-						{
-							text: '<b>List</b>',
-							type: 'button-balanced',
-							onTap: function(e) {
-								$state.go('tab.manage-appointments');
+
 							}
 						}
 						]
@@ -157,8 +266,7 @@ app.controller('MainCtrl', function($scope, $ionicPopup, Pubnub, $pubnubChannel,
 	Pubnub.init({
 		publish_key: 'pub-c-ffcdc13e-a8fe-4299-8a2d-eb5b41f0dc47',
 		subscribe_key: 'sub-c-2d86535e-968a-11e6-94c7-02ee2ddab7fe',
-		ssl: true,
-		uuid: $scope.uuid
+		ssl: true
 	});
 
 	Pubnub.subscribe({
@@ -182,13 +290,13 @@ app.controller('MainCtrl', function($scope, $ionicPopup, Pubnub, $pubnubChannel,
 	// Listening to the callbacks
 	$rootScope.$on(Pubnub.getMessageEventNameFor($scope.bookingAlertChannel), function(ngEvent, m) {
 		console.log(m);
+		openLocalNotification(m, true);
 		$scope.showBookingAlert(m);
 	});
 
 	$rootScope.$on(Pubnub.getMessageEventNameFor($scope.messageAlertChannel), function(ngEvent, m) {
-		console.log(m);
-		console.log($state);
 		if(m.content.threadId !== $state.params.chatId){
+			openLocalNotification(m, false);
 			$scope.showMessageAlert(m);
 		}else{
 			$rootScope.getStreamMessage(m);

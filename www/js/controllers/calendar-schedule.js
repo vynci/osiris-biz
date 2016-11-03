@@ -1,9 +1,9 @@
-app.controller('CalendarScheduleCtrl', function($scope, $ionicPopup, appointmentService, $ionicLoading) {
+app.controller('CalendarScheduleCtrl', function($scope, $ionicPopup, appointmentService, $ionicLoading, artistService, threadService, $state) {
   console.log('calendar!');
   $scope.calendar = {};
 
   var acceptedAppointments = [];
-
+  var bookingPopup;
   $scope.changeMode = function (mode) {
     $scope.calendar.mode = mode;
   };
@@ -12,13 +12,37 @@ app.controller('CalendarScheduleCtrl', function($scope, $ionicPopup, appointment
     $scope.calendar.eventSource = acceptedAppointments;
   };
 
+  $scope.messageCustomer = function(){
+    var customer = $scope.currentCustomerSelected;
+
+    threadService.isThreadExist(customer.get('customerInfo').id, Parse.User.current().get('profileId'))
+    .then(function(results) {
+      // Handle the result
+      console.log(results);
+      bookingPopup.close();
+      if(results.length){
+        $state.go('tab.chat-detail', {customerId: customer.get('customerInfo').id, chatId: results[0].id});
+      }else{
+        console.log('create new thread');
+        getArtistProfile(customer);
+      }
+
+      return results;
+    }, function(err) {
+      // Error occurred
+      console.log(err);
+    }, function(percentComplete) {
+      console.log(percentComplete);
+    });
+  }
+
   $scope.onEventSelected = function (event) {
     console.log('Event selected:' + event.startTime + '-' + event.endTime + ',' + event.title);
     var customer = event.appointment;
     var avatar = customer.get('customerInfo').avatar || 'img/placeholder.png';
-
-    var myPopup = $ionicPopup.show({
-      template: '<div style="padding: 0px 100px;"><img style="width:100%; border-radius: 50%";" src="' + avatar + '"></div><div style="text-align:center;"><button class="button button-small button-blocked button-energized"><i class="icon ion-chatboxes"> Chat</i></button> <button class="button button-small button-blocked button-calm" ng-click="contact()"><i class="icon ion-ios-email"> SMS</i></button>   <button class="button button-small button-balanced"><i class="icon ion-ios-telephone"> Call</i></button></div> <br>Name: ' + customer.get('customerInfo').firstName + ' ' + customer.get('customerInfo').lastName +'<br>Location: Mandaue, Cebu City<br>Contact: ' + customer.get('customerInfo').contactNumber +'<br> Schedule: ' + customer.get('schedule') +' <br> Total Bill: P' + customer.get('totalBill'),
+    $scope.currentCustomerSelected = customer;
+    bookingPopup = $ionicPopup.show({
+      template: '<div style="padding: 0px 100px;"><img style="width:100%; border-radius: 50%";" src="' + avatar + '"></div><div style="text-align:center;"><button class="button button-small button-blocked button-energized" ng-click="messageCustomer()"><i class="icon ion-chatboxes"> Chat</i></button> <a class="button button-small button-blocked button-calm" href="sms:'+ customer.get('customerInfo').contactNumber +'""><i class="icon ion-ios-email"> SMS</i></a>   <a class="button button-small button-balanced" href="tel:'+ customer.get('customerInfo').contactNumber +'"><i class="icon ion-ios-telephone"> Call</i></a></div> <br>Name: ' + customer.get('customerInfo').firstName + ' ' + customer.get('customerInfo').lastName +'<br>Location: Mandaue, Cebu City<br>Contact: ' + customer.get('customerInfo').contactNumber +'<br> Schedule: ' + customer.get('schedule') +'<br>Selected Services: <span ng-repeat="service in currentCustomerSelected.attributes.selectedServices">{{service.name}}{{$last ? "" : ", "}}</span> <br> Total Bill: P' + customer.get('totalBill'),
       title: '<b>Booking Details</b>',
       subTitle: '',
       scope: $scope,
@@ -41,7 +65,7 @@ app.controller('CalendarScheduleCtrl', function($scope, $ionicPopup, appointment
       ]
     });
 
-    myPopup.then(function(res) {
+    bookingPopup.then(function(res) {
       console.log('Tapped!', res);
     });
 
@@ -113,6 +137,55 @@ app.controller('CalendarScheduleCtrl', function($scope, $ionicPopup, appointment
 
   $scope.calendar.eventSource = [];
 
+  function getArtistProfile(customer){
+    if(Parse.User.current()){
+      artistService.getArtistById(Parse.User.current().get('profileId'))
+      .then(function(results) {
+        // Handle the result
+        createNewThread(results[0], customer);
+
+
+        return results;
+      }, function(err) {
+        // Error occurred
+        console.log(err);
+      }, function(percentComplete) {
+        console.log(percentComplete);
+      });
+    }
+  }
+
+  function createNewThread(artist, customer){
+    var Thread = Parse.Object.extend("Thread");
+    var thread = new Thread();
+
+    thread.set("lastMessage", '');
+    thread.set("messages", []);
+    thread.set("artistInfo", {
+      "id": artist.id,
+      "firstName": artist.get('firstName'),
+      "lastName": artist.get('lastName'),
+      "avatar": artist.get('avatar')
+    });
+
+    thread.set("customerInfo", {
+      "id": customer.get('customerInfo').id,
+      "firstName": customer.get('customerInfo').firstName,
+      "lastName": customer.get('customerInfo').lastName,
+      "avatar": customer.get('avatar') || 'img/placeholder.png'
+    });
+
+    thread.save(null, {
+      success: function(result) {
+        // Execute any logic that should take place after the object is saved.
+        console.log('last message success');
+        $state.go('tab.chat-detail', {customerId: customer.get('customerInfo').id, chatId: result.id});
+      },
+      error: function(gameScore, error) {
+      }
+    });
+  }
+
   function getAppointments(){
     console.log('get appointments!');
     acceptedAppointments = [];
@@ -122,7 +195,7 @@ app.controller('CalendarScheduleCtrl', function($scope, $ionicPopup, appointment
       console.log("The loading indicator is now displayed");
     });
 
-    appointmentService.getBookingsById(Parse.User.current().get('profileId'))
+    appointmentService.getBookingsById(Parse.User.current().get('artistId'))
     .then(function(results) {
       // Handle the result
       angular.forEach(results, function(appointment) {

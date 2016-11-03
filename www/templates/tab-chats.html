@@ -1,10 +1,15 @@
 <ion-view view-title="Chat ({{isPubnubOnline || 'Offline'}})">
   <ion-content>
     <ion-list>
-      <ion-item class="item-avatar item-icon-right" ng-repeat="thread in threads" type="item-text-wrap" href="#/tab/chats/{{thread.id}}/{{thread.attributes.customerInfo.id}}">
+      <div ng-if="isLoading" style="text-align: center; padding-top: 50%;">
+        <ion-spinner icon="spiral"></ion-spinner><br>
+        <span>Loading Messages...</span>
+      </div>
+      <div ng-if="threads.length === 0 && !isLoading"> <p style="padding-left: 15px; padding-right: 15px; text-align: center; padding-top: 50%;">You have no messages yet.</p></div>
+      <ion-item ng-if="!isLoading" class="item-avatar item-icon-right" ng-repeat="thread in threads" type="item-text-wrap" href="#/tab/chats/{{thread.id}}/{{thread.attributes.customerInfo.id}}">
         <img ng-src="{{thread.attributes.customerInfo.avatar}}">
-        <h2>{{thread.attributes.customerInfo.firstName}} {{thread.attributes.customerInfo.lastName}}</h2>
-        <p>{{thread.attributes.lastMessage}}</p>
+        <h2 ng-class="{blushnewmessage: thread.attributes.isNewMessageArtist == true}">{{thread.attributes.customerInfo.firstName}} {{thread.attributes.customerInfo.lastName}}</h2>
+        <p ng-class="{blushnewmessage: thread.attributes.isNewMessageArtist == true}">{{thread.attributes.lastMessage}}</p>
         <!-- <p style="font-size: 11px;">{{thread.attributes.updatedAt.toString() | limitTo:21}}</p> -->
         <span am-time-ago="thread.attributes.updatedAt" style="font-size: 11px;"></span>
         <i class="icon ion-chevron-right icon-accessory"></i>

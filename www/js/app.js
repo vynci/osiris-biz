@@ -22,8 +22,9 @@ app.run(function($ionicPlatform) {
     }
   });
 
-  Parse.initialize("myAppId", "myRestAPIKey");
+  Parse.initialize("myAppId", "myJavascriptKey");
   Parse.serverURL = 'https://muse-rest-api.herokuapp.com/parse';
+  // Parse.serverURL = 'http://localhost:1337/parse';
 })
 
 app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
@@ -32,6 +33,8 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
   // Learn more here: https://github.com/angular-ui/ui-router
   // Set up the various states which the app can be in.
   // Each state's controller can be found in controllers.js
+  // ionic.Platform.fullScreen();
+
   $ionicConfigProvider.tabs.position('bottom');
 
   $stateProvider
@@ -68,7 +71,7 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
     })
 
   .state('tab.chat-detail', {
-    url: '/chats/:chatId/:customerId',
+    url: '/chats/:chatId/:customerId/:isNewMessageArtist',
     views: {
       'tab-chats': {
         templateUrl: 'templates/chat-detail.html',

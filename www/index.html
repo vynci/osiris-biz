@@ -19,6 +19,7 @@
     <link href="lib/ionic/css/ionic.css" rel="stylesheet">
     <link rel="stylesheet" href="lib/ionic-calendar/dist/css/calendar.min.css">
     <link href="css/style.css" rel="stylesheet">
+    <link href="lib/ion-datetime-picker/release/ion-datetime-picker.min.css" rel="stylesheet">
     <link href="lib/ion-google-place/ion-google-place.css" rel="stylesheet">
 
     <!-- IF using Sass (run gulp sass first), then uncomment below and remove the CSS includes above
@@ -71,9 +72,16 @@
     <!--
       The nav bar that will be updated as we navigate between views.
     -->
-    <ion-nav-bar class="bar bar-header bar-calm">
-      <ion-nav-back-button>
+    <ion-nav-bar class="bar bar-header bar-light">
+      <ion-nav-back-button hide-back-button="isBackButton">
       </ion-nav-back-button>
+
+      <ion-nav-buttons side="right">
+        <a ng-if="isPubnubOnline === 'Offline'" class="button button-icon button-small button-clear ion-ios-circle-filled" style="color: #ef473a;">
+        </a>
+        <a ng-if="isPubnubOnline === 'Online'" class="button button-icon button-small button-clear ion-ios-circle-filled" style="color: #7dd05b;">
+        </a>
+      </ion-nav-buttons>
     </ion-nav-bar>
     <!--
       The views will be rendered in the <ion-nav-view> directive below

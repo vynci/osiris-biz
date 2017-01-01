@@ -25,6 +25,7 @@ app.controller('LoginCtrl', function($scope, $ionicLoading, $rootScope, $ionicHi
 				// Do stuff after successful login.
 				$rootScope.currentUser = Parse.User.current();
 				$scope.isLoading = false;
+				$rootScope.pubnubRestart();
 				$ionicHistory.nextViewOptions({
 					disableBack: true
 				});

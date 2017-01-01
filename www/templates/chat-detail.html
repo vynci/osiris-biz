@@ -25,8 +25,8 @@ view-title="{{toUser.username}}">
   </div>
 </div>
 
-<div style="font-size: 17px; text-align: center; background: white; border-bottom: 0px; padding-top: 50px; padding-bottom: 0px;" class="item item-divider">
-  <a class="button button-block button-balanced button-small" ng-click="backToInbox()" style="margin-top: 0px;"><i class="icon ion-chevron-left"></i> Back To Inbox</b></a>
+<div style="font-size: 17px; text-align: center; background: white; border-bottom: 0px; padding-top: 60px; padding-bottom: 0px;" class="item item-divider">
+  <a class="button button-block button-balanced button-small" ng-click="backToInbox()" style="margin-top: 0px; margin-bottom: 0px;"><i class="icon ion-chevron-left"></i> Back To Inbox</b></a>
 </div>
 
 <ion-content has-bouncing="true" class="has-header has-footer"
@@ -40,7 +40,7 @@ delegate-handle="userMessageScroll" ng-class="isBackViewHistory">
   <span>Loading Messages...</span>
 </div>
 
-<div ng-repeat="message in messages | orderBy: 'attributes.createdAt'" class="message-wrapper"
+<div ng-repeat="message in messages | orderBy: 'attributes.createdDate'" class="message-wrapper"
 on-hold="onMessageHold($event, $index, message)">
 
 <div ng-if="user._id !== message.attributes.userId">
@@ -55,7 +55,7 @@ on-hold="onMessageHold($event, $index, message)">
 
     <div class="message-detail">
       <!-- <span ng-click="viewProfile(message)" class="bold">{{toUser.username}}</span><br> -->
-      <span am-time-ago="message.attributes.createdAt" style="font-size: 11px;"></span>
+      <span am-time-ago="message.attributes.createdDate" style="font-size: 11px;"></span>
     </div>
 
   </div>
@@ -73,7 +73,7 @@ on-hold="onMessageHold($event, $index, message)">
 
     <div class="message-detail">
       <!-- <span ng-click="viewProfile(message)" class="bold">{{user.username}}</span><br> -->
-      <span am-time-ago="message.attributes.createdAt" style="font-size: 11px;"></span>
+      <span am-time-ago="message.attributes.createdDate" style="font-size: 11px;"></span>
       <span ng-show="message.attributes.isFail" style="font-size: 11px; color: red;">Failed to Send</span>
     </div>
 

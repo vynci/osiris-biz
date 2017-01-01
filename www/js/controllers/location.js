@@ -5,14 +5,9 @@ app.controller('LocationCtrl', function($scope, $ionicLoading, $ionicPopup, arti
 	$scope.position = {
 		search : ''
 	};
-
+	$scope.isLoading = true;
 	$scope.$on('$ionicView.enter', function(e) {
 		if(Parse.User.current()){
-			$ionicLoading.show({
-				template: 'Loading...'
-			}).then(function(){
-
-			});
 			getArtistById(Parse.User.current().get('artistId'));
 		}else{
 			$ionicHistory.nextViewOptions({
@@ -120,10 +115,10 @@ app.controller('LocationCtrl', function($scope, $ionicLoading, $ionicPopup, arti
 			// Handle the result
 			$scope.currentCoordinates = results[0].get('coordinates');
 			initMap($scope.currentCoordinates._latitude, $scope.currentCoordinates._longitude);
-			$ionicLoading.hide();
+			$scope.isLoading = false;
 			return results;
 		}, function(err) {
-			$ionicLoading.hide();
+			$scope.isLoading = false;
 			// Error occurred
 			console.log(err);
 		}, function(percentComplete) {

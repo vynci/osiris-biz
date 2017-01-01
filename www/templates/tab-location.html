@@ -3,6 +3,10 @@
     <div style="padding: 3%; background: #574C4F;">
       <ion-google-place placeholder="Enter Location Here..." ng-model="position.search" current-location="false"/>
     </div>
+    <div ng-if="isLoading" style="text-align: center; padding-top: 50%;">
+      <ion-spinner icon="spiral"></ion-spinner><br>
+      <span>Loading Map and Location...</span>
+    </div>
     <div id="map" data-tap-disabled="true"></div>
   </ion-content>
 </ion-view>

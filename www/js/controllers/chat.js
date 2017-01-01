@@ -3,7 +3,7 @@ app.controller('ChatsCtrl', function($scope, Chats, $ionicHistory, $state, threa
 	$scope.remove = function(chat) {
 		Chats.remove(chat);
 	};
-
+	$scope.spiral = 'img/placeholder.png'
   var user = {};
 	$scope.isLoading = true;
 	$scope.$on('$ionicView.enter', function(e) {
@@ -17,6 +17,22 @@ app.controller('ChatsCtrl', function($scope, Chats, $ionicHistory, $state, threa
             $state.transitionTo('tab.account-login', null, {reload: true, notify:true});
         }
 	});
+
+	$scope.removeThread = function(thread){
+		console.log(thread);
+
+		thread.set("isArtistThreadDeleted", true);
+
+		thread.save(null, {
+			success: function(result) {
+				// Execute any logic that should take place after the object is saved.
+				getThreads();
+			},
+			error: function(gameScore, error) {
+
+			}
+		});
+	}
 
 	function getThreads(){
 		threadService.getThreadById(Parse.User.current().get('artistId'))

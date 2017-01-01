@@ -1,6 +1,6 @@
-<ion-view view-title="Account">
+<ion-view view-title="Profile Settings">
   <ion-content>
-      <div  class="item" style="text-align: center; background: white; padding-top: 15px;">
+      <div ng-if="!isLoading" class="item" style="text-align: center; background: white; padding-top: 15px;">
           <img ng-src="{{profile.avatar || placeholder}}" ng-click="showUploadOption()" style="width: 100px; border-radius: 50%; max-width: 100px; max-height: 100px; border-width: 3px; border-style: solid; border-color: goldenrod;" class="blush-avatar">
           <h2>{{profile.firstName}} {{profile.lastName}}</h2>
           <p>{{profile.serviceType}}</p>
@@ -30,8 +30,6 @@
             <option value="male">Male</option>
           </select>
         </label>
-
-
 
         <div class="item" ion-datetime-picker date ng-model="profile.birthDate">
           <span class="input-label">Birthdate</span>
@@ -67,14 +65,45 @@
           </select>
         </label>
 
-
-        <label class="item">
-          <button class="button button-block button-positive" ng-click="updateProfile()">Update</button>
+        <div class="item item-divider">
+          About Yourself
+        </div>
+        <label class="item" style="padding-left: 3%; padding-right: 3%;">
+          <textarea ng-model="profile.aboutArtist" name="" id="" cols="30" rows="5" style="box-sizing: border-box; border-color: gray; width:100%; border-width: 1px; border-style: solid; padding: 5px;" ng-model="rating.review" placeholder="Showcase yourself to the customers, by specifying what your services is all about.">
+          </textarea>
         </label>
 
+
+        <div class="item item-divider">
+          Account Credentials
+        </div>
+
         <label class="item">
-          <button class="button button-block button-assertive" ng-click="doLogout()">Logout</button>
+          <button class="button button-block button-small button-balanced" ng-click="isChangePassword = true;">Change My Password</button>
         </label>
+        <div ng-show="isChangePassword">
+          <label class="item item-input item-floating-label">
+            <span class="input-label">Old Password</span>
+            <input type="password" placeholder="Old Password">
+          </label>
+          <label class="item item-input item-floating-label">
+            <span class="input-label">New Password</span>
+            <input type="password" placeholder="New Password">
+          </label>
+        </div>
+
+        <div class="row" style="border-top-width: 2px; border-top-color: #444; border-top-style: dashed;">
+          <div class="col-50">
+            <label class="item">
+              <button class="button button-block button-positive" ng-click="updateProfile()">Save</button>
+            </label>
+          </div>
+          <div class="col-50">
+            <label class="item">
+              <button class="button button-block button-assertive" ng-click="doLogout()">Logout</button>
+            </label>
+          </div>
+        </div>
 
       </div>
   </ion-content>

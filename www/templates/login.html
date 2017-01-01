@@ -1,22 +1,37 @@
 
 <ion-view view-title="Login">
 	<ion-content>
-		<div class="list">
-			<label class="item item-input">
+
+		<div style="text-align: center; padding-top: 0px;">
+			<img src="img/stroke.png" alt="" style="width: 60%;">
+			<!-- <h1 style="font-family: 'SouthernAire'; color: #eee; font-size: 8em;">Blush</h1> -->
+		</div>
+
+		<div class="list" style="padding-top: 5%; margin-bottom: 0px;">
+			<!-- <label class="item item-input">
 				<span class="input-label">Username</span>
 				<input type="text" ng-model="loginData.username">
 			</label>
 			<label class="item item-input">
 				<span class="input-label">Password</span>
 				<input type="password" ng-model="loginData.password">
+			</label> -->
+			<label class="item blush-background item-input" style="padding-right: 5%;">
+				<input class="login-text login-input" placeholder="Email" type="text" ng-model="loginData.username">
+			</label>
+			<label class="item blush-background item-input" style="padding-right: 5%;">
+				<input class="login-text login-input" placeholder="Password" type="password" ng-model="loginData.password">
 			</label>
 		</div>
 
 		<div style="font-size: 17px; text-align: center; background: white; border-bottom: 0px;" class="item item-divider">
 			<button class="button button-block button-royal" ng-click="doLogin()">Login</button>
+			<label class="item blush-background text-center" style="padding-top: 0px; padding-bottom: 0px;">
+				<button class="button button-block button-small button-light button-clear" ng-click="forgotPassword()" style="color: #574C4F;  margin-top: 0px;"><b>Forgot your password?</b></button>
+			</label>
 		</div>
 
-		<div ng-if="isLoading" style="text-align: center; padding-top: 25%;">
+		<div ng-if="isLoading" style="text-align: center; padding-top: 3px;">
 			<ion-spinner icon="spiral"></ion-spinner><br>
 			<span>Please Wait, Logging In...</span>
 		</div>

@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<widget id="com.ionicframework.blushmuainterface845754" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-  <name>blush-mua-interface</name>
+<widget id="com.ionicframework.blushmuainterface845754" version="0.0.2" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+  <name>Blush - Artist</name>
   <description>&#xD;
-        An Ionic Framework and Cordova project.&#xD;
+        User Interface for Blush Artists.&#xD;
     </description>
-  <author email="you@example.com" href="http://example.com.com/">&#xD;
-      Your Name Here&#xD;
+  <author email="zagatekph@gmail.com" href="http://blush.ph/">&#xD;
+      Vince Elizaga&#xD;
     </author>
   <content src="index.html"/>
   <access origin="tel:*" launch-external="yes"/>
-  <access origin="sms:*" launch-external="yes" />
+  <access origin="sms:*" launch-external="yes"/>
   <access origin="*"/>
+  <allow-navigation href="tel:*"/>
+  <allow-navigation href="sms:*"/>
   <preference name="webviewbounce" value="false"/>
   <preference name="UIWebViewBounce" value="false"/>
   <preference name="DisallowOverscroll" value="true"/>
@@ -46,8 +48,10 @@
     <splash src="resources/ios/splash/Default-736h.png" width="1242" height="2208"/>
     <splash src="resources/ios/splash/Default-Landscape-736h.png" width="2208" height="1242"/>
     <splash src="resources/ios/splash/Default-Landscape@2x~ipad.png" width="2048" height="1536"/>
+    <splash src="resources/ios/splash/Default-Landscape@~ipadpro.png" width="2732" height="2048"/>
     <splash src="resources/ios/splash/Default-Landscape~ipad.png" width="1024" height="768"/>
     <splash src="resources/ios/splash/Default-Portrait@2x~ipad.png" width="1536" height="2048"/>
+    <splash src="resources/ios/splash/Default-Portrait@~ipadpro.png" width="2048" height="2732"/>
     <splash src="resources/ios/splash/Default-Portrait~ipad.png" width="768" height="1024"/>
     <splash src="resources/ios/splash/Default@2x~iphone.png" width="640" height="960"/>
     <splash src="resources/ios/splash/Default~iphone.png" width="320" height="480"/>
@@ -78,6 +82,9 @@
     <splash src="resources/wp8/splash/SplashScreenImage.png" width="768" height="1280"/>
   </platform>
   <icon src="resources/android/icon/drawable-xhdpi-icon.png"/>
-  <plugin name="cordova-plugin-camera" spec="~2.3.0"/>
+  <plugin name="cordova-plugin-camera" spec="~2.3.0">
+    <variable name="CAMERA_USAGE_DESCRIPTION" value=" "/>
+    <variable name="PHOTOLIBRARY_USAGE_DESCRIPTION" value=" "/>
+  </plugin>
   <plugin name="de.appplant.cordova.plugin.local-notification" spec="https://github.com/katzer/cordova-plugin-local-notifications.git"/>
 </widget>

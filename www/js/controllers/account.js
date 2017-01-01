@@ -10,13 +10,6 @@ app.controller('AccountCtrl', function($scope, $ionicLoading, $rootScope, artist
 	$scope.$on('$ionicView.enter', function(e) {
         if(Parse.User.current()){
             userId = Parse.User.current().get('artistId');
-            // $ionicLoading.show({
-            //     template: 'Loading...'
-            // }).then(function(){
-						//
-            // });
-
-
             getArtistById(Parse.User.current().get('artistId'));
         }else{
             $ionicHistory.nextViewOptions({
@@ -166,6 +159,7 @@ app.controller('AccountCtrl', function($scope, $ionicLoading, $rootScope, artist
 				contactNumber : results[0].get('contactNumber'),
 				serviceType : results[0].get('serviceType'),
 				currentCoordinates : results[0].get('currentCoordinates'),
+				aboutArtist : results[0].get('aboutArtist'),
 				icon : results[0].get('icon') || $scope.userPlaceholder
 			}
 			$scope.isLoading = false;
@@ -189,6 +183,7 @@ app.controller('AccountCtrl', function($scope, $ionicLoading, $rootScope, artist
 		$scope.artistProfile.set("serviceType", $scope.profile.serviceType);
 
 		$scope.artistProfile.set("birthDate",$scope.profile.birthDate);
+		$scope.artistProfile.set("aboutArtist",$scope.profile.aboutArtist);
 
 		if(isAvatar){
 			$scope.artistProfile.set("icon", url);
@@ -224,6 +219,7 @@ app.controller('AccountCtrl', function($scope, $ionicLoading, $rootScope, artist
 			$ionicHistory.nextViewOptions({
 				disableBack: true
 			});
+			$rootScope.unsubscribe();
 			$state.transitionTo('tab.account-login', null, {reload: true, notify:true});
 		});
 	}

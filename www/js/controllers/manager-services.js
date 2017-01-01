@@ -10,7 +10,7 @@ app.controller('ManagerServicesCtrl', function($scope, serviceService, $ionicLoa
 	if(Parse.User.current()){
 		userId = Parse.User.current().get('artistId');
 
-		loading();
+		$scope.isLoading = true;
 
 		getServiceById(userId);
 	}else{
@@ -50,6 +50,7 @@ app.controller('ManagerServicesCtrl', function($scope, serviceService, $ionicLoa
 				uploadFile.save().then(function(result) {
 					// The file has been saved to Parse.
 					console.log(result);
+					loading();
 					$scope.uploadServicePhoto(result._url);
 				}, function(error) {
 					// The file either could not be read, or could not be saved to Parse.
@@ -71,7 +72,7 @@ app.controller('ManagerServicesCtrl', function($scope, serviceService, $ionicLoa
 				var file = imageData;
 
 				var uploadFile = new Parse.File('image.jpg', {base64 : file});
-
+				loading();
 				uploadFile.save().then(function(result) {
 					// The file has been saved to Parse.
 					console.log(result);
@@ -157,6 +158,7 @@ app.controller('ManagerServicesCtrl', function($scope, serviceService, $ionicLoa
 	};
 
 	$scope.uploadServicePhoto = function(url){
+		$ionicLoading.hide();
 		$scope.currentPortfolioDescription = {
 			data : ''
 		}
@@ -316,6 +318,7 @@ app.controller('ManagerServicesCtrl', function($scope, serviceService, $ionicLoa
 		service.set("price", parseInt($scope.service.price));
 		service.set("duration", parseInt($scope.service.duration));
 		service.set("ownerId", userId);
+		service.set("servicePhotos", []);
 
 		service.save(null, {
 			success: function(result) {
@@ -529,10 +532,10 @@ app.controller('ManagerServicesCtrl', function($scope, serviceService, $ionicLoa
 			$scope.artistServices = results;
 			getArtistById(userId);
 			parsePriceRange(results);
-			$ionicLoading.hide();
+			$scope.isLoading = false;
 			return results;
 		}, function(err) {
-			$ionicLoading.hide();
+			$scope.isLoading = false;
 			// Error occurred
 			console.log(err);
 		}, function(percentComplete) {

@@ -1,9 +1,9 @@
 
 app.controller('ChatDetailCtrl', ['$scope', '$rootScope', '$state',
 '$stateParams', 'MockService', '$ionicActionSheet',
-'$ionicPopup', '$ionicScrollDelegate', '$timeout', '$interval', '$ionicLoading', 'messageService', 'artistService', 'customerService', '$ionicScrollDelegate', 'Pubnub', '$ionicHistory',
+'$ionicPopup', '$ionicScrollDelegate', '$timeout', '$interval', '$ionicLoading', 'messageService', 'artistService', 'customerService', '$ionicScrollDelegate', 'Pubnub', '$ionicHistory', '$ionicNavBarDelegate',
 function($scope, $rootScope, $state, $stateParams, MockService,
-	$ionicActionSheet, $ionicPopup, $ionicScrollDelegate, $timeout, $interval, $ionicLoading, messageService, artistService, customerService, $ionicScrollDelegate, Pubnub, $ionicHistory) {
+	$ionicActionSheet, $ionicPopup, $ionicScrollDelegate, $timeout, $interval, $ionicLoading, messageService, artistService, customerService, $ionicScrollDelegate, Pubnub, $ionicHistory, $ionicNavBarDelegate) {
 
 		// mock acquiring data via $stateParams
 		console.log($stateParams);
@@ -31,20 +31,25 @@ function($scope, $rootScope, $state, $stateParams, MockService,
 			$state.transitionTo('tab.chats');
 		}
 
+		// $ionicNavBarDelegate.showBackButton(false);
+
 		$rootScope.getStreamMessage = function(messageObj){
 			if(messageObj.content){
-
+				console.log(messageObj.content.createdAt);
 				var Message = Parse.Object.extend("Message");
 				var message = new Message();
 
 				message.id = messageObj.content.objectId;
-				message.set("createdAt", messageObj.content.createdAt)
+
 				message.set("threadId", messageObj.content.threadId);
 				message.set("message", messageObj.content.message);
 				message.set("userId", messageObj.content.message.userId);
+				message.set("createdDate", new Date());
+
+				console.log(message.attributes);
 
 				$scope.messages.push(message);
-				console.log('message pushed');
+
 				$timeout(function() {
 					viewScroll.scrollBottom();
 				}, 0);
@@ -60,19 +65,21 @@ function($scope, $rootScope, $state, $stateParams, MockService,
 				$scope.isLoading = false;
 				$ionicScrollDelegate.scrollBottom();
 
-				var Thread = Parse.Object.extend("Thread");
-				var thread = new Thread();
+				if($stateParams.isNewMessageArtist !== 'false'){
+					var Thread = Parse.Object.extend("Thread");
+					var thread = new Thread();
 
-				thread.id = $stateParams.chatId;
-				thread.set("isNewMessageArtist", false);
+					thread.id = $stateParams.chatId;
+					thread.set("isNewMessageArtist", false);
 
-				thread.save(null, {
-					success: function(result) {
-					},
-					error: function(gameScore, error) {
-						message.set("isFail", true);
-					}
-				});
+					thread.save(null, {
+						success: function(result) {
+						},
+						error: function(gameScore, error) {
+							message.set("isFail", true);
+						}
+					});
+				}
 
 			}, function(err) {
 				// Error occurred
@@ -130,19 +137,20 @@ function($scope, $rootScope, $state, $stateParams, MockService,
 		var scroller;
 		var txtInput; // ^^^
 
+		// $scope.$on('$ionicView.beforeLeave', function(e) {
+		// 	$ionicNavBarDelegate.showBackButton(true);
+		// });
+		//
+		// $scope.$on('$ionicView.beforeEnter', function(e) {
+		// 	$ionicNavBarDelegate.showBackButton(false);
+		// });
+
+
 		$scope.$on('$ionicView.enter', function() {
 			console.log('UserMessages $ionicView.enter');
 			$scope.isLoading = true;
 			$scope.backViewHistory = $ionicHistory.backView();
 			$scope.isBackViewHistory = 'chat-history-header-adjust';
-			// if($scope.backViewHistory){
-			// 	if($scope.backViewHistory.stateId === 'tab.manage-appointments'){
-			//
-			// 	}else{
-			// 		$scope.isBackViewHistory = '';
-			// 	}
-			// }
-
 			getArtistById(Parse.User.current().get('artistId'));
 
 			$timeout(function() {
@@ -151,24 +159,9 @@ function($scope, $rootScope, $state, $stateParams, MockService,
 				txtInput = angular.element(footerBar.querySelector('textarea'));
 			}, 0);
 
-			messageCheckTimer = $interval(function() {
-				// here you could check for new messages if your app doesn't use push notifications or user disabled them
-			}, 20000);
-		});
-
-		$scope.$on('$ionicView.leave', function() {
-			console.log('leaving UserMessages view, destroying interval');
-			// Make sure that the interval is destroyed
-			if (angular.isDefined(messageCheckTimer)) {
-				$interval.cancel(messageCheckTimer);
-				messageCheckTimer = undefined;
-			}
-		});
-
-		$scope.$on('$ionicView.beforeLeave', function() {
-			if (!$scope.input.message || $scope.input.message === '') {
-				localStorage.removeItem('userMessage-' + $scope.toUser._id);
-			}
+			// messageCheckTimer = $interval(function() {
+			// 	// here you could check for new messages if your app doesn't use push notifications or user disabled them
+			// }, 20000);
 		});
 
 		function getMessages() {
@@ -184,12 +177,12 @@ function($scope, $rootScope, $state, $stateParams, MockService,
 				}, 0);
 			});
 		}
-
-		$scope.$watch('input.message', function(newValue, oldValue) {
-			console.log('input.message $watch, newValue ' + newValue);
-			if (!newValue) newValue = '';
-			localStorage['userMessage-' + $scope.toUser._id] = newValue;
-		});
+		//
+		// $scope.$watch('input.message', function(newValue, oldValue) {
+		// 	console.log('input.message $watch, newValue ' + newValue);
+		// 	if (!newValue) newValue = '';
+		// 	localStorage['userMessage-' + $scope.toUser._id] = newValue;
+		// });
 
 		$scope.sendMessage = function(sendMessageForm) {
 			var message = $scope.input.message;
@@ -217,6 +210,7 @@ function($scope, $rootScope, $state, $stateParams, MockService,
 			message.set("threadId", $stateParams.chatId);
 			message.set("message", messageTxt);
 			message.set("userId", Parse.User.current().get('artistId'));
+			message.set("createdDate", new Date());
 			$scope.messages.push(message);
 			message.save(null, {
 				success: function(result) {
@@ -228,25 +222,27 @@ function($scope, $rootScope, $state, $stateParams, MockService,
 					thread.id = $stateParams.chatId;
 					thread.set("lastMessage", messageTxt);
 					thread.set("isNewMessageCustomer", true);
+					thread.set("isCustomerThreadDeleted", false);
+					thread.set("messageFrom", 'artist');
 
 					thread.save(null, {
 						success: function(result) {
 							// Execute any logic that should take place after the object is saved.
 							console.log('last message success');
-							Pubnub.publish({
-								channel: 'message/' + $stateParams.customerId,
-								message: {
-									content: message,
-									sender: {
-										name: $scope.user.username,
-										avatar : $scope.user.pic
-									},
-									date: new Date()
-								},
-								callback: function(m) {
-									console.log(m);
-								}
-							});
+							// Pubnub.publish({
+							// 	channel: 'message/' + $stateParams.customerId,
+							// 	message: {
+							// 		content: message,
+							// 		sender: {
+							// 			name: $scope.user.username,
+							// 			avatar : $scope.user.pic
+							// 		},
+							// 		date: new Date()
+							// 	},
+							// 	callback: function(m) {
+							// 		console.log(m);
+							// 	}
+							// });
 
 						},
 						error: function(gameScore, error) {

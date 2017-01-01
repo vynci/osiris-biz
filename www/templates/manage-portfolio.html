@@ -10,6 +10,11 @@
       My Portfolio (<b>{{artistPortfolio.length}}</b>)
     </div>
 
+    <div ng-if="isLoading" style="text-align: center; padding-top: 50%;">
+      <ion-spinner icon="spiral"></ion-spinner><br>
+      <span>Loading Pictures...</span>
+    </div>
+
     <div class="row" ng-repeat="image in artistPortfolio" ng-if="$index % 3 === 0">
       <div class="col col-33" ng-if="$index < artistPortfolio.length">
         <img ng-click="viewPortfolio(artistPortfolio[$index])" ng-src="{{artistPortfolio[$index].attributes.imagePath}}" spinkit-image-preloader='chasing-dots-spinner' width="100%" />

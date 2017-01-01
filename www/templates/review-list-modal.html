@@ -11,7 +11,7 @@
 
 		<div class="list">
 			<a class="item item-avatar" ng-repeat="review in artistReviews">
-				<img ng-src="{{review.attributes.customerInfo.avatar}}">
+				<img ng-src="{{review.attributes.customerInfo.avatar || spiral}}">
 				<h2>{{review.attributes.customerInfo.firstName}} {{review.attributes.customerInfo.lastName}}</h2>
 				<p>{{review.attributes.description}}</p>
 				<div class="col" style="">

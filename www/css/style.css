@@ -6,6 +6,36 @@
 
 /* Overrides */
 
+.tabs {
+	background-color: #443b3e;
+}
+
+.tabs-striped .tabs {
+	background-color: #443b3e;
+}
+
+ion-tabs.tabs-color-active-positive .tab-item {
+	color: white;
+}
+
+ion-tabs.tabs-color-active-positive .tab-item.tab-item-active, ion-tabs.tabs-color-active-positive .tab-item.active, ion-tabs.tabs-color-active-positive .tab-item.activated {
+	color: #f1807a;
+}
+
+ion-tabs.tabs-striped.tabs-color-active-positive .tab-item.tab-item-active, ion-tabs.tabs-striped.tabs-color-active-positive .tab-item.active, ion-tabs.tabs-striped.tabs-color-active-positive .tab-item.activated {
+	border-color: #f1807a;
+	color: #f1807a;
+}
+
+.card, .list-inset {
+	border-radius: 15px;
+}
+
+.item-divider {
+	background-color: #f1807a;
+	color: white;
+}
+
 input.ion-google-place[readonly]{
 	background-color: transparent;
 	cursor: text;
@@ -13,12 +43,28 @@ input.ion-google-place[readonly]{
 	padding-left: 3%;
 }
 
+.button {
+	border-radius: 30px;
+}
+
+.button.button-assertive {
+	background-color: #f1807a;
+}
+
+.button.button-balanced {
+	background-color: #51BB70;
+}
+
+.button.button-positive {
+	background-color: #528FF6;
+}
+
 .button.button-royal {
-	background : rgb(183, 208, 91);
+	background : #443b3e;
 }
 
 .button.button-royal.activated {
-	background : rgb(210, 224, 161);
+	background : #69585D;
 }
 
 .popup-head {
@@ -46,11 +92,27 @@ input.ion-google-place[readonly]{
 }
 
 .monthview-primary-with-event {
-	background-color: #ffb9c9 !important;
+	background-color: #f1807a !important;
 }
 
 .monthview-selected {
 	background-color: #46CA46 !important;
+}
+
+/* Login */
+
+.login-text {
+color: #444 !important;
+text-align: center;
+}
+
+.login-input {
+border-width: 1px !important;
+border-style: solid !important;
+border-radius: 30px !important;
+height: 50px !important;
+background: white !important;
+padding-right: 0px !important;
 }
 
 /* Chat */
@@ -230,6 +292,7 @@ a.autolinker {
 
 /*iOS override*/
 
+/*Disabling platform specific tweaks */
 .platform-ios.platform-cordova:not(.fullscreen) .bar-header
 {
 	height: 44px !important;
@@ -241,24 +304,24 @@ a.autolinker {
 
 .platform-ios.platform-cordova:not(.fullscreen) .bar-header:not(.bar-subheader).item-input-inset .item-input-wrapper
 {
-	margin-top: 0px !important;
+	margin-top: 7px !important;
 }
 
 .platform-ios.platform-cordova:not(.fullscreen) .bar-header:not(.bar-subheader) > *
 {
-	margin-top: 0px !important;
+	margin-top: 7px !important;
 }
 
 .platform-ios.platform-cordova:not(.fullscreen) .tabs-top > .tabs, .platform-ios.platform-cordova:not(.fullscreen) .tabs.tabs-top
 {
-	top: 75px !important;
+	top: 44px !important;
 }
 
 .platform-ios.platform-cordova:not(.fullscreen) .has-header, .platform-ios.platform-cordova:not(.fullscreen) .bar-subheader
 {
-	top: 75px !important;
+	top: 44px !important;
 }
 
 .platform-ios.platform-cordova:not(.fullscreen) .has-subheader {
-	top: 88px !important;
+	top: 93px !important;
 }

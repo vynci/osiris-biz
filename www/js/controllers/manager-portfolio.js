@@ -6,11 +6,7 @@ app.controller('ManagerPortfolioCtrl', function($scope, serviceService, $ionicLo
 	if(Parse.User.current()){
 		userId = Parse.User.current().get('artistId');
 
-		$ionicLoading.show({
-			template: 'Loading...'
-		}).then(function(){
-
-		});
+		$scope.isLoading = true;
 
 		getPortfolioById(userId);
 	}else{
@@ -104,7 +100,7 @@ app.controller('ManagerPortfolioCtrl', function($scope, serviceService, $ionicLo
 				    type: 'button-assertive',
 					onTap: function(e) {
 						deletePortfolio(portfolio);
-					}                    
+					}
 				},
 				{
 					text: '<b>Save</b>',
@@ -180,9 +176,9 @@ app.controller('ManagerPortfolioCtrl', function($scope, serviceService, $ionicLo
         });
 
 	};
-    
-    function deletePortfolio(portfolio){        
-        
+
+  function deletePortfolio(portfolio){
+
 		var confirmPopup = $ionicPopup.confirm({
 			title: 'Service',
 			template: 'Are you sure you want to delete this portfolio?',
@@ -198,7 +194,7 @@ app.controller('ManagerPortfolioCtrl', function($scope, serviceService, $ionicLo
                 }).then(function(){
 
                 });
-                
+
 				portfolio.destroy({
 					success: function(myObject) {
 						// The object was deleted from the Parse Cloud.
@@ -227,7 +223,7 @@ app.controller('ManagerPortfolioCtrl', function($scope, serviceService, $ionicLo
 			} else {
 				console.log('You are not sure');
 			}
-		});        
+		});
     }
 
 	function savePortfolio(imagePath, description, id){
@@ -246,6 +242,7 @@ app.controller('ManagerPortfolioCtrl', function($scope, serviceService, $ionicLo
 		}else{
 			portfolio.set("imagePath", imagePath);
 			portfolio.set("ownerId", Parse.User.current().get('artistId'));
+			portfolio.set("artistInfo", {id: Parse.User.current().get('artistId')});
 		}
 
 		portfolio.set("description", description);
@@ -291,9 +288,9 @@ app.controller('ManagerPortfolioCtrl', function($scope, serviceService, $ionicLo
 			// Handle the result
 			console.log(results);
 			$scope.artistPortfolio = results;
-			$ionicLoading.hide();
+			$scope.isLoading = false;
 		}, function(err) {
-			$ionicLoading.hide();
+			$scope.isLoading = false;
 			// Error occurred
 			console.log(err);
 		}, function(percentComplete) {

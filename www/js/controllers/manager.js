@@ -10,6 +10,8 @@ app.controller('ManagerCtrl', function($scope, $ionicHistory, $state, reviewServ
 	$scope.isServiceLoading = true;
 	$scope.isPortfolioLoading = true;
 
+	$scope.spiral = "img/placeholder.png"
+
 	$scope.$on('$ionicView.enter', function(e) {
 
     if(Parse.User.current()){

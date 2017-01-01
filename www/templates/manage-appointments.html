@@ -8,7 +8,7 @@
     <!-- </label> -->
 
     <div class="card">
-      <div style="background: #ffc900; color: white;" class="item item-divider text-center">
+      <div style="background: #E5C037; color: white;" class="item item-divider text-center">
         Pending <b>({{appointments.pending.length}})</b>
       </div>
       <div ng-if="isLoading" style="text-align: center; padding-top: 25px;">
@@ -23,7 +23,7 @@
           <!-- <p>{{pendingAppointment.attributes.createdAt.toString() | limitTo:21}}</p> -->
           <span am-time-ago="pendingAppointment.attributes.createdAt" style="font-size: 11px;"></span>
           <button class="button button-positive" ng-click="showBookingAlert(pendingAppointment, 'Accept')">
-            View
+            Details
           </button>
         </a>
       </div>
@@ -38,7 +38,7 @@
     </div>
 
     <div class="card">
-      <div style="background: #387ef5; color: white;" class="item item-divider text-center">
+      <div style="background: #528FF6; color: white;" class="item item-divider text-center">
         Accepted <b>({{appointments.accepted.length}})</b>
       </div>
       <div ng-if="isLoading" style="text-align: center; padding-top: 25px;">
@@ -48,10 +48,10 @@
       <div ng-if="appointments.accepted.length === 0 && !isLoading"> <p style="padding-left: 15px; padding-right: 15px; text-align: center; padding-top:10px;">You currently have no accepted appointments.</p></div>
 
       <a class="item item-button-right" ng-repeat="acceptedAppointment in appointments.accepted | orderBy: '-attributes.updatedAt' | limitTo:listView.accepted">
-        {{acceptedAppointment.attributes.customerInfo.firstName}} {{acceptedAppointment.attributes.customerInfo.lastName}}<br>
+        {{acceptedAppointment.attributes.customerInfo.firstName || 'Anonymous'}} {{acceptedAppointment.attributes.customerInfo.lastName|| 'User'}}<br>
         <span am-time-ago="acceptedAppointment.attributes.updatedAt" style="font-size: 11px;"></span>
         <button class="button button-positive" ng-click="showBookingAlert(acceptedAppointment, 'Complete', 'button-balanced')">
-          View
+          Details
         </button>
       </a>
       <div ng-if="listView.accepted === 3 && appointments.accepted.length > 3" style="font-size: 17px; text-align: center; background: white; border-bottom: 0px;" class="item item-divider">
@@ -63,7 +63,7 @@
     </div>
 
     <div class="card">
-      <div style="background: #33cd5f; color: white;" class="item item-divider text-center">
+      <div style="background: #51BB70; color: white;" class="item item-divider text-center">
         Completed <b>({{appointments.completed.length}})</b>
       </div>
       <div ng-if="isLoading" style="text-align: center; padding-top: 25px;">
@@ -72,7 +72,7 @@
       </div>
       <div ng-if="appointments.completed.length === 0 && !isLoading"> <p style="padding-left: 15px; padding-right: 15px; text-align: center; padding-top:10px;">You currently have no completed appointments.</p></div>
       <a class="item item-button-right" ng-repeat="completedAppointment in appointments.completed | orderBy: '-attributes.updatedAt' | limitTo:listView.completed">
-        {{completedAppointment.attributes.customerInfo.firstName}} {{completedAppointment.attributes.customerInfo.lastName}}<br>
+        {{completedAppointment.attributes.customerInfo.firstName || 'Anonymous'}} {{completedAppointment.attributes.customerInfo.lastName || 'User'}}<br>
         <span am-time-ago="completedAppointment.attributes.updatedAt" style="font-size: 11px;"></span>
         <button class="button button-balanced" ng-click="restoreAppointment(completedAppointment, true)">
           Restore
@@ -90,7 +90,7 @@
     </div>
 
     <div class="card">
-      <div style="background: #ef473a; color: white;" class="item item-divider text-center">
+      <div style="background: #f1807a; color: white;" class="item item-divider text-center">
         Canceled <b>({{appointments.canceled.length}})</b>
       </div>
       <div ng-if="isLoading" style="text-align: center; padding-top: 25px;">
@@ -99,7 +99,7 @@
       </div>
       <div ng-if="appointments.canceled.length === 0 && !isLoading"> <p style="padding-left: 15px; padding-right: 15px; text-align: center; padding-top:10px;">You currently have no canceled appointments.</p></div>
       <a class="item item-button-right" ng-repeat="canceledAppointment in appointments.canceled | orderBy: '-attributes.updatedAt' | limitTo:listView.canceled">
-        {{canceledAppointment.attributes.customerInfo.firstName}} {{canceledAppointment.attributes.customerInfo.lastName}}<br>
+        {{canceledAppointment.attributes.customerInfo.firstName || 'Anonymous'}} {{canceledAppointment.attributes.customerInfo.lastName || 'User'}}<br>
         <span am-time-ago="canceledAppointment.attributes.updatedAt" style="font-size: 11px;"></span>
         <button class="button button-assertive" ng-click="restoreAppointment(canceledAppointment)">
           Restore

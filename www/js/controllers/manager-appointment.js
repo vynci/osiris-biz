@@ -32,25 +32,36 @@ app.controller('ManagerAppointmentCtrl', function($scope, $ionicPopup, appointme
 	$scope.messageCustomer = function(){
 		var customer = $scope.currentCustomerSelected;
 
-		threadService.isThreadExist(customer.get('customerInfo').id, Parse.User.current().get('profileId'))
-		.then(function(results) {
-			// Handle the result
-			console.log(results);
-			bookingPopup.close();
-			if(results.length){
-				$state.go('tab.chat-detail', {customerId: customer.get('customerInfo').id, chatId: results[0].id});
-			}else{
-				console.log('create new thread');
-				getArtistProfile(customer);
-			}
+		if(customer.get('customerInfo').id){
+			threadService.isThreadExist(customer.get('customerInfo').id, Parse.User.current().get('artistId'))
+			.then(function(results) {
+				// Handle the result
+				console.log(results);
+				bookingPopup.close();
+				if(results.length){
+					$state.go('tab.chat-detail', {customerId: customer.get('customerInfo').id, chatId: results[0].id});
+				}else{
+					console.log('create new thread');
+					getArtistProfile(customer);
+				}
 
-			return results;
-		}, function(err) {
-			// Error occurred
-			console.log(err);
-		}, function(percentComplete) {
-			console.log(percentComplete);
-		});
+				return results;
+			}, function(err) {
+				// Error occurred
+				console.log(err);
+			}, function(percentComplete) {
+				console.log(percentComplete);
+			});
+		} else{
+			var alertPopup = $ionicPopup.alert({
+				title: 'Customer Not Registered Yet.',
+				template: 'You cannot chat with this user yet. <br><br>Please contact the customer through SMS or Phone Call.'
+			});
+
+			alertPopup.then(function(res) {
+				console.log('Thank you for not eating my delicious ice cream cone');
+			});
+		}
 	}
 
 	$scope.viewAll = function(listType, status){
@@ -63,7 +74,7 @@ app.controller('ManagerAppointmentCtrl', function($scope, $ionicPopup, appointme
 			var avatar = customer.get('customerInfo').avatar || 'img/placeholder.png';
 			$scope.currentCustomerSelected = customer;
 			bookingPopup = $ionicPopup.show({
-				template: '<div style="padding: 0px 100px;"><img style="width:100%; border-radius: 50%";" src="' + avatar + '"></div><div style="text-align:center;"><button class="button button-small button-blocked button-energized" ng-click="messageCustomer()"><i class="icon ion-chatboxes"> Chat</i></button> <a class="button button-small button-blocked button-calm" href="sms:'+ customer.get('customerInfo').contactNumber +'""><i class="icon ion-ios-email"> SMS</i></a>   <a class="button button-small button-balanced" href="tel:'+ customer.get('customerInfo').contactNumber +'"><i class="icon ion-ios-telephone"> Call</i></a></div> <br>Name: ' + customer.get('customerInfo').firstName + ' ' + customer.get('customerInfo').lastName +'<br>Location: Mandaue, Cebu City<br>Contact: ' + customer.get('customerInfo').contactNumber +'<br> Schedule: ' + customer.get('schedule') +'<br>Selected Services: <span ng-repeat="service in currentCustomerSelected.attributes.selectedServices">{{service.name}}{{$last ? "" : ", "}}</span> <br> Total Bill: P' + customer.get('totalBill'),
+				template: '<div style="padding: 0px 100px;"><img style="width:100%; border-radius: 50%";" src="' + avatar + '"></div><div style="text-align:center;"><button class="button button-small button-blocked button-energized" ng-click="messageCustomer()"><i class="icon ion-chatboxes"> Chat</i></button> <a class="button button-small button-blocked button-calm" href="sms:'+ customer.get('customerInfo').contactNumber +'""><i class="icon ion-ios-email"> SMS</i></a>   <a class="button button-small button-balanced" href="tel:'+ customer.get('customerInfo').contactNumber +'"><i class="icon ion-ios-telephone"> Call</i></a></div> <br><span ng-if="currentCustomerSelected.attributes.customerInfo.firstName">Name: ' + customer.get('customerInfo').firstName + ' ' + customer.get('customerInfo').lastName +'</span><br>Location: Mandaue, Cebu City<br>Contact: ' + customer.get('customerInfo').contactNumber +'<br> Schedule: ' + customer.get('schedule') +'<br>Selected Services: <span ng-repeat="service in currentCustomerSelected.attributes.selectedServices track by $index">{{service.name}}{{$last ? "" : ", "}}</span> <br> Total Bill: P' + customer.get('totalBill'),
 				title: '<b>Booking Details</b>',
 				subTitle: '',
 				scope: $scope,
@@ -97,23 +108,32 @@ app.controller('ManagerAppointmentCtrl', function($scope, $ionicPopup, appointme
 	};
 
 	$scope.restoreAppointment = function(appointment, isCompleted){
-		console.log('decline!');
-		var confirmPopup = $ionicPopup.confirm({
-			title: '<b>Restore Booking</b>',
-			template: 'Are you sure you want to <b style="color:yellow;">RESTORE?</b>'
+		var myPopup = $ionicPopup.show({
+			template: 'What status would you like to set this booking?',
+			title: 'Restore Booking Status',
+			subTitle: '',
+			scope: $scope,
+			buttons: [
+				{ text: 'Cancel' },
+				{
+					text: '<b>Pending</b>',
+					type: 'button-energized',
+					onTap: function(e) {
+						setAppointment(appointment, 'pending', 'Pending');
+					}
+				},
+				{
+					text: '<b>Accepted</b>',
+					type: 'button-positive',
+					onTap: function(e) {
+						setAppointment(appointment, 'accepted', 'Accepted');
+					}
+				}
+			]
 		});
 
-		confirmPopup.then(function(res) {
-			if(res) {
-				if(isCompleted){
-					setAppointment(appointment, 'accepted', 'Accepted');
-				}else{
-					setAppointment(appointment, 'pending', 'Pending');
-				}
-
-			} else {
-				console.log('You are not sure');
-			}
+		myPopup.then(function(res) {
+			console.log('Tapped!', res);
 		});
 	}
 
@@ -165,7 +185,7 @@ app.controller('ManagerAppointmentCtrl', function($scope, $ionicPopup, appointme
 
 	function getArtistProfile(customer){
 		if(Parse.User.current()){
-			artistService.getArtistById(Parse.User.current().get('profileId'))
+			artistService.getArtistById(Parse.User.current().get('artistId'))
 			.then(function(results) {
 				// Handle the result
 				createNewThread(results[0], customer);
@@ -237,13 +257,17 @@ app.controller('ManagerAppointmentCtrl', function($scope, $ionicPopup, appointme
 	function setAppointment(appointment, status, type){
 		appointment.set("status", status);
 
+		if(type === 'Accepted'){
+			type = '<b>Accepted</b><br><br> This booking has now been added to your calendar schedule.'
+		}
+
 		appointment.save(null, {
 			success: function(result) {
 				clearAppointments();
 				getAppointments();
 				var alertPopup = $ionicPopup.alert({
 					title: '<b>Booking</b>',
-					template: 'Booking Successfully ' + type
+					template: 'Booking Successfully Added to: ' + type
 				});
 
 				alertPopup.then(function(res) {

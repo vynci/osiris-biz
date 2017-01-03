@@ -12,10 +12,10 @@
       </div>
       <div ng-if="artistPortfolio.length === 0"> <p style="padding-left: 15px; padding-right: 15px; text-align: center;">You have no portfolio yet, tap on "Manage Portfolio" to add.</p></div>
       <div class="row" ng-if="artistPortfolio.length !== 0">
-        <div class="col"><img ng-src="{{artistPortfolio[0].attributes.imagePath}}" alt="" style="width: 100%;"></div>
-        <div class="col"><img ng-src="{{artistPortfolio[1].attributes.imagePath}}" alt="" style="width: 100%;"></div>
-        <div class="col"><img ng-src="{{artistPortfolio[2].attributes.imagePath}}" alt="" style="width: 100%;"></div>
-        <div class="col"><img ng-src="{{artistPortfolio[3].attributes.imagePath}}" alt="" style="width: 100%;"></div>
+        <div class="col"><img ng-src="{{artistPortfolio[0].attributes.imagePath}}" alt="" style="width: 100%;" class="animate-show" fade-in></div>
+        <div class="col"><img ng-src="{{artistPortfolio[1].attributes.imagePath}}" alt="" style="width: 100%;" class="animate-show" fade-in></div>
+        <div class="col"><img ng-src="{{artistPortfolio[2].attributes.imagePath}}" alt="" style="width: 100%;" class="animate-show" fade-in></div>
+        <div class="col"><img ng-src="{{artistPortfolio[3].attributes.imagePath}}" alt="" style="width: 100%;" class="animate-show" fade-in></div>
       </div>
       <div style="padding: 15px 15px;">
         <a class="button button-block button-royal" href="#/tab/manage-portfolio">Manage Portfolio</a>
@@ -62,7 +62,7 @@
       <!-- <div ng-if="!artistReviews.length" class="item" style="text-align: center; white-space: normal;">Sorry, {{profile.firstName}} doesn't have any reviews yet.</div> -->
       <div class="list" ng-if="artistReviews.length !== 0">
         <a class="item item-avatar" ng-repeat="review in artistReviews | limitTo:2">
-          <img ng-src="{{review.attributes.customerInfo.avatar || spiral}}">
+          <img ng-src="{{review.attributes.customerInfo.avatar || spiral}}" class="animate-show" fade-in>
           <h2>{{review.attributes.customerInfo.firstName}} {{review.attributes.customerInfo.lastName}}</h2>
           <p>{{review.attributes.description}}</p>
           <div class="col" style="">

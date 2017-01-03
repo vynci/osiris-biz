@@ -194,7 +194,7 @@ app.controller('ManagerPortfolioCtrl', function($scope, serviceService, $ionicLo
 
 		var confirmPopup = $ionicPopup.confirm({
 			title: 'Service',
-			template: 'Are you sure you want to delete this portfolio?',
+			template: 'Are you sure you want to delete this picture?',
 			okText: 'Yes, I am sure!', // String (default: 'OK'). The text of the OK button.
 			okType: 'button-assertive', // String (default: 'button-positive'). The type of the OK button.
 		});
@@ -203,7 +203,7 @@ app.controller('ManagerPortfolioCtrl', function($scope, serviceService, $ionicLo
 			if(res) {
 
                 $ionicLoading.show({
-                    template: 'Loading...'
+                    template: 'Deleting...'
                 }).then(function(){
 
                 });
@@ -214,7 +214,7 @@ app.controller('ManagerPortfolioCtrl', function($scope, serviceService, $ionicLo
 						$ionicLoading.hide();
 						var alertPopup = $ionicPopup.alert({
 							title: 'Portfolio',
-							template: 'Portfolio Successfully Deleted'
+							template: 'Picture Successfully Deleted'
 						});
 
 						alertPopup.then(function(res) {
@@ -225,7 +225,7 @@ app.controller('ManagerPortfolioCtrl', function($scope, serviceService, $ionicLo
 						$ionicLoading.hide();
 						var alertPopup = $ionicPopup.alert({
 							title: 'Portfolio',
-							template: 'Portfolio: Delete Failed'
+							template: 'Picture: Delete Failed'
 						});
 
 						alertPopup.then(function(res) {

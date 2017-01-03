@@ -439,7 +439,7 @@ app.controller('ManagerServicesCtrl', function($scope, serviceService, $ionicLoa
 
 	function deleteServicePhoto(arrayNumber, id){
 		$ionicLoading.show({
-			template: 'Loading...'
+			template: 'Deleting...'
 		}).then(function(){
 
 		});

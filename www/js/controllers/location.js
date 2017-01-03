@@ -78,7 +78,8 @@ app.controller('LocationCtrl', function($scope, $ionicLoading, $ionicPopup, arti
 
 		marker = new google.maps.Marker({
 			position: googlelatLng,
-			map: $scope.map
+			map: $scope.map,
+			icon : 'img/pink-circle.png'
 		});
 
 		if(!isInit){

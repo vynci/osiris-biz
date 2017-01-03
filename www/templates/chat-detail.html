@@ -45,8 +45,8 @@ on-hold="onMessageHold($event, $index, message)">
 
 <div ng-if="user._id !== message.attributes.userId">
 
-  <img ng-click="viewProfile(message)" class="profile-pic left"
-  ng-src="{{toUser.pic || spiral}}" onerror="onProfilePicError(this)" />
+  <img ng-click="viewProfile(message)" class="profile-pic left animate-show"
+  ng-src="{{toUser.pic || spiral}}" onerror="onProfilePicError(this)" fade-in/>
 
   <div class="chat-bubble left">
 
@@ -63,8 +63,8 @@ on-hold="onMessageHold($event, $index, message)">
 
 <div ng-if="user._id === message.attributes.userId">
 
-  <img ng-click="viewProfile(message)" class="profile-pic right"
-  ng-src="{{user.pic || spiral}}" onerror="onProfilePicError(this)" />
+  <img ng-click="viewProfile(message)" class="profile-pic right animate-show"
+  ng-src="{{user.pic || spiral}}" onerror="onProfilePicError(this)" fade-in/>
 
   <div class="chat-bubble right">
 

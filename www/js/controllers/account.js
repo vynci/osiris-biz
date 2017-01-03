@@ -5,6 +5,12 @@ app.controller('AccountCtrl', function($scope, $ionicLoading, $rootScope, artist
 
 	}
 
+	$scope.password = {
+		old : '',
+		new : '',
+		confirmNew: ''
+	}
+
 	$scope.placeholder = 'img/placeholder.png'
 	$scope.isLoading = true;
 	$scope.$on('$ionicView.enter', function(e) {
@@ -77,6 +83,30 @@ app.controller('AccountCtrl', function($scope, $ionicLoading, $rootScope, artist
 		updateProfile(false);
 	};
 
+	$scope.changePassword = function(){
+		var myPopup = $ionicPopup.show({
+			template: '<input style="border: 1px solid rgb(68, 68, 68); border-radius: 30px; padding-left: 15px;" type="password" placeholder="Old Password" ng-model="password.old"><br><input style="border: 1px solid rgb(68, 68, 68); border-radius: 30px; padding-left: 15px;" type="password" placeholder="New Password" ng-model="password.new"><br><input style="border: 1px solid rgb(68, 68, 68); border-radius: 30px; padding-left: 15px;" type="password" placeholder="Confirm New Password" ng-model="password.confirmNew">',
+			title: 'Change Password',
+			subTitle: 'Please enter the credentials',
+			scope: $scope,
+			buttons: [
+				{ text: 'Cancel' },
+				{
+					text: '<b>Update</b>',
+					type: 'button-assertive',
+					onTap: function(e) {
+						updatePassword();
+					}
+				}
+			]
+		});
+
+		myPopup.then(function(res) {
+			console.log('Tapped!', res);
+		});
+
+	}
+
 	$scope.showUploadOption = function() {
 		$scope.data = {};
 
@@ -111,7 +141,82 @@ app.controller('AccountCtrl', function($scope, $ionicLoading, $rootScope, artist
 
 	};
 
-    function updateAvatar(url){
+	function updatePassword(){
+
+		console.log($scope.password);
+
+		if($scope.password.old !== ''){
+			var user = Parse.User.current();
+
+			$ionicLoading.show({
+				template: 'Checking Old Password...'
+			}).then(function(){
+				console.log("The loading indicator is now displayed");
+			});
+
+			Parse.User.logIn(user.get('username'), $scope.password.old, {
+				success: function(user) {
+					// Do stuff after successful login.
+
+					$ionicLoading.hide();
+
+					if($scope.password.new === $scope.password.confirmNew){
+
+						$ionicLoading.show({
+							template: 'Updating Password...'
+						}).then(function(){
+							console.log("The loading indicator is now displayed");
+						});
+
+						user.set("password", $scope.password.new);
+						user.save()
+						.then(
+							function(user) {
+								console.log('Password changed', user);
+
+								$ionicLoading.hide();
+
+								var alertPopup = $ionicPopup.alert({
+									title: '<b>Login</b>',
+									template: 'Password successfully updated.'
+								});
+
+								alertPopup.then(function(res) {
+								});
+							},
+							function(error) {
+								console.log('Something went wrong', error);
+							}
+						);
+					}else{
+
+						$ionicLoading.hide();
+
+						var alertPopup = $ionicPopup.alert({
+							title: '<b>Password Update Failed</b>',
+							template: 'Sorry confirm new password does not match. Please Try Again.'
+						});
+
+						alertPopup.then(function(res) {
+						});
+					}
+				},
+				error: function(user, error) {
+					// The login failed. Check error to see why.
+					$ionicLoading.hide();
+					var alertPopup = $ionicPopup.alert({
+						title: '<b>Password Update Failed</b>',
+						template: 'Sorry old password is incorrect. Password has not bet updated.'
+					});
+
+					alertPopup.then(function(res) {
+					});
+				}
+			});
+		}
+	}
+
+  function updateAvatar(url){
         $ionicLoading.show({
             template: 'Loading...'
         }).then(function(){

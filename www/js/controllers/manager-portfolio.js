@@ -24,8 +24,8 @@ app.controller('ManagerPortfolioCtrl', function($scope, serviceService, $ionicLo
 			sourceType: Camera.PictureSourceType.CAMERA,
 			allowEdit: true,
 			encodingType: Camera.EncodingType.JPEG,
-			targetWidth: 400,
-			targetHeight: 400,
+			targetWidth: 720,
+			targetHeight: 720,
 			popoverOptions: CameraPopoverOptions,
 			saveToPhotoAlbum: false,
 			correctOrientation:true,
@@ -43,6 +43,12 @@ app.controller('ManagerPortfolioCtrl', function($scope, serviceService, $ionicLo
 
 				var uploadFile = new Parse.File('image.jpg', {base64 : file});
 				console.log(uploadFile);
+
+				$ionicLoading.show({
+					template: 'Uploading...'
+				}).then(function(){
+
+				});
 
 				uploadFile.save().then(function(result) {
 					// The file has been saved to Parse.
@@ -68,6 +74,12 @@ app.controller('ManagerPortfolioCtrl', function($scope, serviceService, $ionicLo
 				var file = imageData;
 
 				var uploadFile = new Parse.File('image.jpg', {base64 : file});
+
+				$ionicLoading.show({
+					template: 'Uploading...'
+				}).then(function(){
+
+				});
 
 				uploadFile.save().then(function(result) {
 					// The file has been saved to Parse.
@@ -118,6 +130,7 @@ app.controller('ManagerPortfolioCtrl', function($scope, serviceService, $ionicLo
 	}
 
 	$scope.uploadPortfolio = function(url){
+		$ionicLoading.hide();
 		$scope.currentPortfolioDescription = {
 			data : ''
 		}

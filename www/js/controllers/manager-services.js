@@ -27,8 +27,8 @@ app.controller('ManagerServicesCtrl', function($scope, serviceService, $ionicLoa
 			sourceType: Camera.PictureSourceType.CAMERA,
 			allowEdit: true,
 			encodingType: Camera.EncodingType.JPEG,
-			targetWidth: 400,
-			targetHeight: 400,
+			targetWidth: 720,
+			targetHeight: 720,
 			popoverOptions: CameraPopoverOptions,
 			saveToPhotoAlbum: false,
 			correctOrientation:true,
@@ -47,10 +47,11 @@ app.controller('ManagerServicesCtrl', function($scope, serviceService, $ionicLoa
 				var uploadFile = new Parse.File('image.jpg', {base64 : file});
 				console.log(uploadFile);
 
+				loading();
+
 				uploadFile.save().then(function(result) {
 					// The file has been saved to Parse.
 					console.log(result);
-					loading();
 					$scope.uploadServicePhoto(result._url);
 				}, function(error) {
 					// The file either could not be read, or could not be saved to Parse.

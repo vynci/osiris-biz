@@ -1,0 +1,71 @@
+
+<ion-view view-title="Signup">
+	<ion-content>
+
+		<div style="text-align: center; padding-top: 0px;">
+			<h2>Artist Registration</h2>
+			<h5>Please fill up the form below</h5>
+		</div>
+		<form ng-submit="register()">
+			<div class="list" style="padding-top: 5%; margin-bottom: 0px;">
+				<label class="item blush-background item-input" style="padding-right: 5%;">
+					<input class="login-text login-input" placeholder="First Name" type="text" ng-model="userData.firstName">
+				</label>
+				<label class="item blush-background item-input" style="padding-right: 5%;">
+					<input class="login-text login-input" placeholder="Last Name" type="text" ng-model="userData.lastName">
+				</label>
+
+				<label class="item blush-background item-input" style="padding-right: 5%;">
+					<input class="login-text login-input" placeholder="Primary Address" type="text" ng-model="userData.primaryAddress">
+				</label>
+				<label class="item blush-background item-input" style="padding-right: 5%;">
+					<input class="login-text login-input" placeholder="Secondary Address (Optional)" type="text" ng-model="userData.secondaryAddress">
+				</label>
+
+				<label class="item blush-background item-input" style="padding-right: 5%;">
+					<input class="login-text login-input" placeholder="Email Address" type="email" ng-model="userData.email">
+				</label>
+				<label class="item blush-background item-input" style="padding-right: 5%;">
+					<input class="login-text login-input" placeholder="Contact Number" type="number" ng-model="userData.contactNumber">
+				</label>
+				<label class="item blush-background item-input" style="padding-right: 5%;">
+					<input class="login-text login-input" placeholder="Years of Experience in Makeup and/or hairstyling" type="number" min="0" max="99" ng-model="userData.yearsOfExperience">
+				</label>
+
+				<label class="item blush-background item-input" style="padding-right: 5%;">
+					<textarea ng-model="userData.socialMedia" name="" id="" cols="30" rows="5" style="box-sizing: border-box; border-color: #444; width:100%; border-width: 1px; border-style: solid; padding: 10px; border-radius: 25px;" placeholder="Social Media Accounts (facebook, instagram, etc.)">
+					</textarea>
+				</label>
+
+				<label class="item blush-background item-input" style="padding-right: 5%;">
+					<textarea ng-model="userData.website" name="" id="" cols="30" rows="5" style="box-sizing: border-box; border-color: #444; width:100%; border-width: 1px; border-style: solid; padding: 10px; border-radius: 25px;" placeholder="Personal Websites / Blogs (Optional)">
+					</textarea>
+				</label>
+
+				<label class="item blush-background item-input" style="padding-right: 5%;">
+					<textarea ng-model="userData.certifications" name="" id="" cols="30" rows="5" style="box-sizing: border-box; border-color: #444; width:100%; border-width: 1px; border-style: solid; padding: 10px; border-radius: 25px;" placeholder="Certifications / Awards (Optional)">
+					</textarea>
+				</label>
+
+				<label class="item blush-background item-input" style="padding-right: 5%;">
+					<textarea ng-model="userData.aboutArtist" name="" id="" cols="30" rows="5" style="box-sizing: border-box; border-color: #444; width:100%; border-width: 1px; border-style: solid; padding: 10px; border-radius: 25px;" placeholder="Tell us about yourself">
+					</textarea>
+				</label>
+
+			</div>
+
+			<div style="padding-left: 13px; padding-right: 13px;  text-align: center; padding-top: 13px;">
+				<a href="#" onclick="window.open('http://blush.ph/terms-of-service.html', '_system', 'location=yes'); return false;" style="text-decoration: none; font-size:12px; color: #444;">Signing up signifies that you have read and agree to the <b>Terms of Service</b> and <b>Privacy Policy</b></a>
+			</div>
+
+			<div style="font-size: 17px; text-align: center; background: white; border-bottom: 0px;" class="item item-divider">
+				<button class="button button-block button-royal" type="submit" id="submit">Submit</button>
+			</div>
+
+		</form>
+		<div ng-if="isLoading" style="text-align: center; padding-top: 3px;">
+			<ion-spinner icon="spiral"></ion-spinner><br>
+			<span>Please Wait, Logging In...</span>
+		</div>
+	</ion-content>
+</ion-view>

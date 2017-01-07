@@ -161,6 +161,16 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
     }
   })
 
+  .state('tab.account-register', {
+    url: '/register',
+    views: {
+      'tab-account': {
+        templateUrl: 'templates/register.html',
+        controller: 'RegisterCtrl'
+      }
+    }
+  })
+
   .state('tab.account', {
     url: '/account',
     views: {
